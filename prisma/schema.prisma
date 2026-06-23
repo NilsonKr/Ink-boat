@@ -1,0 +1,85 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Get a free hosted Postgres database in seconds: `npx create-db`
+
+generator client {
+  provider = "prisma-client"
+  output = "../src/lib/db/generated/"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+
+// schema.prisma
+// Medium-style blogging app — initial schema
+// Pattern: BigInt internal PK (fast joins) + nanoid public_id (clean, unguessable URLs)
+
+// ---------------------------------------------------------------------------
+
+model User {
+  id            BigInt   @id @default(autoincrement())
+  email         String   @unique
+  passwordHash  String   @map("password_hash") // argon2id / bcrypt — never plaintext
+  displayName   String?  @map("display_name")
+  emailVerified Boolean  @default(false) @map("email_verified")
+  createdAt     DateTime @default(now()) @map("created_at")
+  updatedAt     DateTime @updatedAt @map("updated_at")
+
+  drafts Draft[]
+
+  @@map("users")
+}
+
+// ---------------------------------------------------------------------------
+
+enum DraftStatus {
+  DRAFT
+  PUBLISHED
+  ARCHIVED
+}
+
+model Draft {
+  id       BigInt @id @default(autoincrement()) // internal: joins / FKs only
+  publicId String @unique @default(nanoid(12)) @map("public_id") @db.VarChar(12) // goes in the URL
+
+  title       String      @default("")
+  slug        String? // slugify(title); cosmetic only, NOT unique (URL = slug + "-" + publicId)
+  content     Json? // Tiptap / ProseMirror document (output of editor.getJSON())
+  status      DraftStatus @default(DRAFT)
+  config      Json        @default("{}") // free-form, never-queried settings: theme, editor prefs, layout
+  publishedAt DateTime?   @map("published_at")
+  createdAt   DateTime    @default(now()) @map("created_at")
+  updatedAt   DateTime    @updatedAt @map("updated_at")
+
+  userId BigInt @map("user_id")
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  media Media[]
+
+  @@index([userId, status]) // "my drafts", filterable by status
+  @@index([status, publishedAt]) // public feed of published posts, newest first
+  @@map("drafts")
+}
+
+// ---------------------------------------------------------------------------
+
+model Media {
+  id         BigInt   @id @default(autoincrement())
+  storageKey String   @map("storage_key") // R2 object key — NOT the image bytes
+  mimeType   String?  @map("mime_type")
+  altText    String?  @map("alt_text")
+  position   Int? // ordering within the draft
+  width      Int?
+  height     Int?
+  sizeBytes  BigInt?  @map("size_bytes")
+  createdAt  DateTime @default(now()) @map("created_at")
+
+  draftId BigInt @map("draft_id")
+  draft   Draft  @relation(fields: [draftId], references: [id], onDelete: Cascade)
+
+  @@index([draftId, position])
+  @@map("media")
+}
