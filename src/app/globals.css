@@ -1,0 +1,325 @@
+@import 'tailwindcss';
+@import 'tw-animate-css';
+@import 'shadcn/tailwind.css';
+/* Recto webfonts (Newsreader, Libre Franklin, IBM Plex Mono) are loaded via
+   next/font in app/layout.tsx, which injects --font-display / --font-sans /
+   --font-mono onto <html>. No CSS @import needed. */
+
+@custom-variant dark (&:is(.dark *));
+
+html {
+  height: 100%;
+}
+
+html,
+body {
+  max-width: 100vw;
+  overflow-x: hidden;
+}
+
+body {
+  min-height: 100%;
+  display: flex;
+  flex-direction: column;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+* {
+  box-sizing: border-box;
+  padding: 0;
+  margin: 0;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+@media (prefers-color-scheme: dark) {
+  html {
+    color-scheme: dark;
+  }
+}
+
+@theme inline {
+  /* Fonts */
+  --font-sans: var(--font-sans);
+  --font-display: var(--font-display);
+  --font-heading: var(--font-display);
+  --font-mono: var(--font-mono);
+
+  /* Editorial type scale (exposed as text-* utilities) */
+  --text-display-xl: var(--size-display-xl);
+  --text-display: var(--size-display);
+  --text-h1: var(--size-h1);
+  --text-h2: var(--size-h2);
+  --text-title: var(--size-title);
+  --text-lede: var(--size-lede);
+  --text-body: var(--size-body);
+  --text-body-sm: var(--size-body-sm);
+  --text-label: var(--size-label);
+  --text-label-sm: var(--size-label-sm);
+
+  /* shadcn semantic colors */
+  --color-sidebar-ring: var(--sidebar-ring);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar: var(--sidebar);
+  --color-chart-5: var(--chart-5);
+  --color-chart-4: var(--chart-4);
+  --color-chart-3: var(--chart-3);
+  --color-chart-2: var(--chart-2);
+  --color-chart-1: var(--chart-1);
+  --color-ring: var(--ring);
+  --color-input: var(--input);
+  --color-border: var(--border);
+  --color-destructive: var(--destructive);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-accent: var(--accent);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-muted: var(--muted);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-secondary: var(--secondary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-primary: var(--primary);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-popover: var(--popover);
+  --color-card-foreground: var(--card-foreground);
+  --color-card: var(--card);
+  --color-foreground: var(--foreground);
+  --color-background: var(--background);
+  --radius-sm: calc(var(--radius) * 0.6);
+  --radius-md: calc(var(--radius) * 0.8);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) * 1.4);
+  --radius-2xl: calc(var(--radius) * 1.8);
+  --radius-3xl: calc(var(--radius) * 2.2);
+  --radius-4xl: calc(var(--radius) * 2.6);
+}
+
+:root {
+  /* ===================================================================
+     Recto design system — raw tokens
+     Brand triad: Espresso (ink), Marigold (primary), Plum (auxiliary).
+     Warm paper neutrals. Status colors are functional, not brand.
+     =================================================================== */
+
+  /* — Fonts: --font-display / --font-sans / --font-mono are injected on <html>
+     by next/font (see app/layout.tsx). — */
+
+  /* Display / headline weights */
+  --weight-display: 500;
+  --weight-display-bold: 600;
+  --weight-display-black: 700;
+  /* Body / UI weights */
+  --weight-regular: 400;
+  --weight-medium: 500;
+  --weight-semibold: 600;
+
+  /* Type scale (editorial) */
+  --size-display-xl: 62px;
+  --size-display: 40px;
+  --size-h1: 38px;
+  --size-h2: 28px;
+  --size-title: 23px;
+  --size-lede: 18px;
+  --size-body: 15px;
+  --size-body-sm: 13px;
+  --size-label: 11px;
+  --size-label-sm: 10px;
+
+  /* Tracking */
+  --track-display: -0.02em;
+  --track-title: -0.01em;
+  --track-label: 0.16em;
+  /* Leading */
+  --leading-tight: 0.95;
+  --leading-snug: 1.12;
+  --leading-body: 1.5;
+
+  /* — Brand: Espresso (warm near-black brown) — */
+  --espresso-900: #1a130a;
+  --espresso-800: #231a0f;
+  --espresso-700: #3a2c1b;
+  --espresso-600: #4a3a28;
+  /* — Brand: Marigold (primary accent / CTA) — */
+  --marigold-700: #d9a824;
+  --marigold-500: #e8b837;
+  --marigold-300: #f1cf6f;
+  --marigold-100: #f7e9bb;
+  /* — Brand: Plum (auxiliary accent) — */
+  --plum-700: #592a42;
+  --plum-500: #6e3551;
+  --plum-300: #a06d83;
+  --plum-100: #ead8e0;
+
+  /* — Neutrals: warm paper — */
+  --paper-0: #ffffff;
+  --paper-50: #f6f3ea;
+  --paper-100: #f4f1e8;
+  --sand-200: #e7e5df;
+  --sand-300: #d8d4ca;
+
+  /* — Text — */
+  --text-strong: #231a0f;
+  --text-body-color: #4a3f30;
+  --text-muted-color: #7a715f;
+  --text-label-color: #9a8f7b;
+  --text-on-dark: #f3ead9;
+  --text-on-dark-muted: #b3a488;
+
+  /* — Lines / borders — */
+  --line: rgba(35, 26, 15, 0.14);
+  --line-strong: rgba(35, 26, 15, 0.3);
+  --line-on-dark: rgba(243, 234, 217, 0.16);
+
+  /* — Status (functional, not brand) — */
+  --status-draft: #b58e12;
+  --status-published: #5b7a4f;
+  --status-scheduled: #6e3551;
+  --status-draft-tint: rgba(181, 142, 18, 0.12);
+  --status-published-tint: rgba(91, 122, 79, 0.12);
+  --status-scheduled-tint: rgba(110, 53, 81, 0.12);
+
+  /* — Brand semantic aliases — */
+  --surface-app: var(--sand-200);
+  --surface-panel: var(--paper-100);
+  --surface-card: var(--paper-0);
+  --surface-ink: var(--espresso-800);
+  --accent-deep: var(--marigold-700);
+  --accent-aux: var(--plum-500);
+  --on-accent: var(--espresso-800);
+  --on-accent-aux: var(--paper-0);
+  --focus-ring: rgba(232, 184, 55, 0.22);
+
+  /* — Spacing (4px rhythm) — */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 20px;
+  --space-6: 24px;
+  --space-8: 32px;
+  --space-10: 40px;
+  --space-12: 48px;
+  --space-14: 56px;
+  --space-16: 64px;
+
+  /* — Radii — */
+  --radius-card: 2px;
+  --radius-input: 7px;
+  --radius-button: 8px;
+  --radius-pill: 999px;
+
+  /* — Borders — */
+  --border-hairline: 1px solid var(--line);
+  --border-rule: 2px solid var(--espresso-800);
+
+  /* — Shadows — */
+  --shadow-card: 0 1px 3px rgba(0, 0, 0, 0.08);
+  --shadow-raised: 0 6px 20px rgba(35, 26, 15, 0.1);
+  --shadow-pop: 0 24px 60px rgba(0, 0, 0, 0.4);
+  --shadow-cta: 0 2px 10px rgba(232, 184, 55, 0.32);
+  --shadow-cta-aux: 0 2px 10px rgba(110, 53, 81, 0.28);
+
+  /* ===================================================================
+     shadcn semantic tokens, mapped onto the Recto palette (light)
+     =================================================================== */
+  --radius: 0.5rem; /* matches --radius-button (8px) */
+  --background: var(--sand-200);
+  --foreground: var(--text-strong);
+  --card: var(--paper-0);
+  --card-foreground: var(--text-strong);
+  --popover: var(--paper-0);
+  --popover-foreground: var(--text-strong);
+  --primary: var(--marigold-500);
+  --primary-foreground: var(--on-accent);
+  --secondary: var(--plum-500);
+  --secondary-foreground: var(--on-accent-aux);
+  --muted: var(--paper-100);
+  --muted-foreground: var(--text-muted-color);
+  --accent: var(--marigold-100);
+  --accent-foreground: var(--espresso-800);
+  --destructive: #b3261e;
+  --border: var(--line);
+  --input: var(--line);
+  --ring: var(--marigold-500);
+  --chart-1: var(--marigold-500);
+  --chart-2: var(--plum-500);
+  --chart-3: var(--status-published);
+  --chart-4: var(--status-draft);
+  --chart-5: var(--espresso-700);
+  --sidebar: var(--paper-100);
+  --sidebar-foreground: var(--text-strong);
+  --sidebar-primary: var(--marigold-500);
+  --sidebar-primary-foreground: var(--on-accent);
+  --sidebar-accent: var(--marigold-100);
+  --sidebar-accent-foreground: var(--espresso-800);
+  --sidebar-border: var(--line);
+  --sidebar-ring: var(--marigold-500);
+}
+
+.dark {
+  /* Recto on ink — espresso surfaces, warm light text */
+  --background: var(--espresso-900);
+  --foreground: var(--text-on-dark);
+  --card: var(--espresso-800);
+  --card-foreground: var(--text-on-dark);
+  --popover: var(--espresso-800);
+  --popover-foreground: var(--text-on-dark);
+  --primary: var(--marigold-500);
+  --primary-foreground: var(--on-accent);
+  --secondary: var(--plum-500);
+  --secondary-foreground: var(--on-accent-aux);
+  --muted: var(--espresso-700);
+  --muted-foreground: var(--text-on-dark-muted);
+  --accent: var(--espresso-700);
+  --accent-foreground: var(--text-on-dark);
+  --destructive: #e5685f;
+  --border: var(--line-on-dark);
+  --input: var(--line-on-dark);
+  --ring: var(--marigold-500);
+  --chart-1: var(--marigold-500);
+  --chart-2: var(--plum-300);
+  --chart-3: var(--status-published);
+  --chart-4: var(--status-draft);
+  --chart-5: var(--marigold-300);
+  --sidebar: var(--espresso-800);
+  --sidebar-foreground: var(--text-on-dark);
+  --sidebar-primary: var(--marigold-500);
+  --sidebar-primary-foreground: var(--on-accent);
+  --sidebar-accent: var(--espresso-700);
+  --sidebar-accent-foreground: var(--text-on-dark);
+  --sidebar-border: var(--line-on-dark);
+  --sidebar-ring: var(--marigold-500);
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  body {
+    @apply bg-background text-foreground;
+    font-family: var(--font-sans);
+    font-size: var(--size-body);
+    line-height: var(--leading-body);
+  }
+  html {
+    @apply font-sans;
+  }
+  h1,
+  h2,
+  h3,
+  h4 {
+    font-family: var(--font-display);
+    font-weight: var(--weight-display);
+    letter-spacing: var(--track-display);
+    line-height: var(--leading-snug);
+    color: var(--text-strong);
+  }
+}
