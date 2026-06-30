@@ -5,7 +5,7 @@ import { Input } from "@/components/ui/input"
 import { Field, FieldGroup, FieldLabel } from "@/components/ui/field"
 
 import { cn } from "@/lib/utils"
-import { REGISTER_COPY } from "@/lib/constants"
+import { REGISTER_COPY } from "@/lib/copy"
 
 import type { RegisterFormProps } from "@/types/auth"
 

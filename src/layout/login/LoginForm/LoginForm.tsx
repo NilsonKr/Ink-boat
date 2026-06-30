@@ -6,7 +6,7 @@ import { Field, FieldGroup, FieldLabel } from "@/components/ui/field"
 
 import { cn } from "@/lib/utils"
 
-import { LOGIN_COPY } from "@/lib/constants"
+import { LOGIN_COPY } from "@/lib/copy"
 
 import type { LoginFormProps } from "@/types/auth"
 

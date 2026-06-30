@@ -1,7 +1,7 @@
 import BrandPanel from "@/layout/auth/BrandPanel"
 import RegisterForm from "@/layout/register/RegisterForm"
 
-import { REGISTER_COPY } from "@/lib/constants"
+import { REGISTER_COPY } from "@/lib/copy"
 
 const RegisterPage = () => {
   return (
