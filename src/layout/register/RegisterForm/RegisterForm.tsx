@@ -6,7 +6,7 @@ import { registerAction } from '@/actions/auth'
 
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
-import { Field, FieldGroup, FieldLabel } from "@/components/ui/field"
+import { Field, FieldGroup, FieldLabel, FieldError } from "@/components/ui/field"
 
 import { cn } from "@/lib/utils"
 import { REGISTER_COPY } from "@/lib/copy"
@@ -16,7 +16,10 @@ type ComponentProps = {
 }
 
 const RegisterForm: React.FC<ComponentProps> = ({ className }) => {
-  const [state, formAction, pending] = useActionState(registerAction, { error: null })
+  const [state, formAction, pending] = useActionState(registerAction, {
+    fieldErrors: {},
+    formError: null,
+  })
 
   const { form } = REGISTER_COPY
 
@@ -58,10 +61,14 @@ const RegisterForm: React.FC<ComponentProps> = ({ className }) => {
             id="name"
             name="name"
             type="text"
+            minLength={2}
+            maxLength={60}
             placeholder={form.namePlaceholder}
             autoComplete="name"
+            aria-invalid={!!state.fieldErrors.name}
             className={inputClassName}
           />
+          <FieldError errors={state.fieldErrors.name?.map((message) => ({ message }))} />
         </Field>
 
         <Field>
@@ -75,8 +82,10 @@ const RegisterForm: React.FC<ComponentProps> = ({ className }) => {
             name="email"
             placeholder={form.emailPlaceholder}
             autoComplete="email"
+            aria-invalid={!!state.fieldErrors.email}
             className={inputClassName}
           />
+          <FieldError errors={state.fieldErrors.email?.map((message) => ({ message }))} />
         </Field>
 
         <Field>
@@ -88,10 +97,14 @@ const RegisterForm: React.FC<ComponentProps> = ({ className }) => {
             id="password"
             type="password"
             name="password"
+            minLength={8}
+            maxLength={64}
             placeholder={form.passwordPlaceholder}
             autoComplete="new-password"
+            aria-invalid={!!state.fieldErrors.password}
             className={inputClassName}
           />
+          <FieldError errors={state.fieldErrors.password?.map((message) => ({ message }))} />
         </Field>
 
         <Button
@@ -118,7 +131,7 @@ const RegisterForm: React.FC<ComponentProps> = ({ className }) => {
       </p>
 
       <p className='text-center text-red-700 font-medium text-lg mt-8 min-h-14'>
-        {state.error ?? ''}
+        {state.formError ?? ''}
       </p>
     </form>
   )

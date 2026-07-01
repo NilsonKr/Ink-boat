@@ -8,7 +8,7 @@ const RegisterPage = () => {
     <main className="flex min-h-screen w-full items-center justify-center bg-background">
       <div className="grid min-h-screen w-full grid-cols-1 overflow-hidden rounded-[var(--radius-card)] bg-card shadow-[var(--shadow-card)] md:grid-cols-2">
         <BrandPanel copy={REGISTER_COPY.brand} />
-        <RegisterForm />
+        <RegisterForm className="" />
       </div>
     </main>
   )

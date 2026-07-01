@@ -1,30 +1,41 @@
 'use server'
+import { z } from 'zod'
 import { redirect } from 'next/navigation'
 import { headers } from 'next/headers'
 import { APIError } from 'better-auth'
 
 import { auth } from '@/lib/auth'
+import { registerSchema, loginSchema } from '@/schemas/auth'
 
 
 export type RegisterStateType = {
-  error: string | null
+  fieldErrors: {
+    name?: string[]
+    email?: string[]
+    password?: string[]
+  }
+  formError: string | null
 }
 
 export const registerAction = async (
   _prev: RegisterStateType,
   formData: FormData
 ): Promise<RegisterStateType> => {
-  const name = String(formData.get('name') ?? '')
-  const email = String(formData.get('email') ?? '')
-  const password = String(formData.get('password') ?? '')
+  const parsed = registerSchema.safeParse(Object.fromEntries(formData))
+
+  if (!parsed.success) {
+    return { fieldErrors: z.flattenError(parsed.error).fieldErrors, formError: null }
+  }
+
+  const { name, email, password } = parsed.data
 
   try {
     await auth.api.signUpEmail({ body: { name, email, password } })
 
   } catch (error) {
-    if (error instanceof APIError) return { error: error.message }
+    const message = error instanceof APIError ? error.message : (error as Error).message
 
-    return { error: (error as Error).message }
+    return { fieldErrors: {}, formError: message }
   }
 
   redirect('/drafts')
@@ -32,23 +43,32 @@ export const registerAction = async (
 
 
 export type LoginStateType = {
-  error: string | null
+  fieldErrors: {
+    email?: string[]
+    password?: string[]
+  }
+  formError: string | null
 }
 
 export const loginAction = async (
   _prev: LoginStateType,
   formData: FormData
 ): Promise<LoginStateType> => {
-  const email = String(formData.get('email') ?? '')
-  const password = String(formData.get('password') ?? '')
+  const parsed = loginSchema.safeParse(Object.fromEntries(formData))
+
+  if (!parsed.success) {
+    return { fieldErrors: z.flattenError(parsed.error).fieldErrors, formError: null }
+  }
+
+  const { email, password } = parsed.data
 
   try {
     await auth.api.signInEmail({ body: { email, password } })
 
   } catch (error) {
-    if (error instanceof APIError) return { error: error.message }
+    const message = error instanceof APIError ? error.message : (error as Error).message
 
-    return { error: (error as Error).message }
+    return { fieldErrors: {}, formError: message }
   }
 
   redirect('/drafts')

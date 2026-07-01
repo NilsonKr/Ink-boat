@@ -6,7 +6,7 @@ import { loginAction } from '@/actions/auth'
 
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
-import { Field, FieldGroup, FieldLabel } from "@/components/ui/field"
+import { Field, FieldGroup, FieldLabel, FieldError } from "@/components/ui/field"
 
 import { cn } from "@/lib/utils"
 
@@ -15,7 +15,10 @@ import { LOGIN_COPY } from "@/lib/copy"
 import type { LoginFormProps } from "@/types/auth"
 
 const LoginForm: React.FC<LoginFormProps> = ({ className }) => {
-  const [state, formAction, pending] = useActionState(loginAction, { error: null })
+  const [state, formAction, pending] = useActionState(loginAction, {
+    fieldErrors: {},
+    formError: null,
+  })
 
   const { form } = LOGIN_COPY
 
@@ -56,8 +59,10 @@ const LoginForm: React.FC<LoginFormProps> = ({ className }) => {
             name="email"
             placeholder={form.emailPlaceholder}
             autoComplete="email"
+            aria-invalid={!!state.fieldErrors.email}
             className={inputClassName}
           />
+          <FieldError errors={state.fieldErrors.email?.map((message) => ({ message }))} />
         </Field>
 
         <Field>
@@ -69,10 +74,14 @@ const LoginForm: React.FC<LoginFormProps> = ({ className }) => {
             id="password"
             type="password"
             name="password"
+            minLength={8}
+            maxLength={60}
             placeholder={form.passwordPlaceholder}
             autoComplete="current-password"
+            aria-invalid={!!state.fieldErrors.password}
             className={inputClassName}
           />
+          <FieldError errors={state.fieldErrors.password?.map((message) => ({ message }))} />
         </Field>
 
         <Button
@@ -85,7 +94,7 @@ const LoginForm: React.FC<LoginFormProps> = ({ className }) => {
       </FieldGroup>
 
       <p className='text-center text-red-700 font-medium text-lg mt-8 min-h-14'>
-        {state.error ?? ''}
+        {state.formError ?? ''}
       </p>
     </form>
   )
