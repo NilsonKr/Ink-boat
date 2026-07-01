@@ -16,7 +16,7 @@ export function proxy(request: NextRequest) {
   const isAuthRoute = AUTH_ROUTES.includes(pathname)
 
   if (session && isAuthRoute) {
-    return NextResponse.redirect(new URL('/', request.url))
+    return NextResponse.redirect(new URL('/drafts', request.url))
   }
 
   return NextResponse.next()

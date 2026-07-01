@@ -12,7 +12,7 @@ const ProtectedLayout: React.FC<LayoutProps> = async ({ children }) => {
   })
 
   if (!session)
-    redirect('/login')
+    redirect('/logout')
 
   return children
 }
