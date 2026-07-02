@@ -105,6 +105,7 @@ model Draft {
   publicId String @unique @default(nanoid(12)) @map("public_id") @db.VarChar(12) // goes in the URL
 
   title       String      @default("")
+  description String      @default("")
   slug        String? // slugify(title); cosmetic only, NOT unique (URL = slug + "-" + publicId)
   content     Json? // Tiptap / ProseMirror document (output of editor.getJSON())
   status      DraftStatus @default(DRAFT)
