@@ -1,4 +1,5 @@
 import type { LoginCopy, RegisterCopy } from '@/types/auth'
+import type { DraftsCopy } from '@/types/drafts'
 
 export const LOGIN_COPY: LoginCopy = {
   brand: {
@@ -52,5 +53,18 @@ export const REGISTER_COPY: RegisterCopy = {
       privacyLink: 'Privacy Policy',
       suffix: '.',
     },
+  },
+}
+
+export const DRAFTS_COPY: DraftsCopy = {
+  eyebrow: 'Your desk',
+  heading: 'Drafts',
+  subtitle: "Everything you're writing, in one place.",
+  newDraft: 'New draft',
+  filters: {
+    all: 'All',
+    draft: 'Drafts',
+    published: 'Published',
+    scheduled: 'Scheduled',
   },
 }
