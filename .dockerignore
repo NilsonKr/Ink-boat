@@ -10,3 +10,5 @@ docker-compose.yaml
 README.md
 .DS_Store
 coverage
+.pnpm-store
+.modules.yaml

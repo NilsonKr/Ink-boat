@@ -1,16 +1,25 @@
+'use client'
+import { useActionState } from "react"
 import Link from "next/link"
+
+import { loginAction } from '@/actions/auth'
 
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
-import { Field, FieldGroup, FieldLabel } from "@/components/ui/field"
+import { Field, FieldGroup, FieldLabel, FieldError } from "@/components/ui/field"
 
 import { cn } from "@/lib/utils"
 
-import { LOGIN_COPY } from "@/lib/constants"
+import { LOGIN_COPY } from "@/lib/copy"
 
 import type { LoginFormProps } from "@/types/auth"
 
 const LoginForm: React.FC<LoginFormProps> = ({ className }) => {
+  const [state, formAction, pending] = useActionState(loginAction, {
+    fieldErrors: {},
+    formError: null,
+  })
+
   const { form } = LOGIN_COPY
 
   const inputClassName =
@@ -20,6 +29,7 @@ const LoginForm: React.FC<LoginFormProps> = ({ className }) => {
 
   return (
     <form
+      action={formAction}
       className={cn(
         "flex flex-col justify-center bg-muted p-8 text-[var(--text-strong)] md:p-[52px]",
         className
@@ -46,10 +56,13 @@ const LoginForm: React.FC<LoginFormProps> = ({ className }) => {
           <Input
             id="email"
             type="email"
+            name="email"
             placeholder={form.emailPlaceholder}
             autoComplete="email"
+            aria-invalid={!!state.fieldErrors.email}
             className={inputClassName}
           />
+          <FieldError errors={state.fieldErrors.email?.map((message) => ({ message }))} />
         </Field>
 
         <Field>
@@ -57,21 +70,32 @@ const LoginForm: React.FC<LoginFormProps> = ({ className }) => {
             {form.passwordLabel}
           </FieldLabel>
           <Input
+            required
             id="password"
             type="password"
+            name="password"
+            minLength={8}
+            maxLength={60}
             placeholder={form.passwordPlaceholder}
             autoComplete="current-password"
+            aria-invalid={!!state.fieldErrors.password}
             className={inputClassName}
           />
+          <FieldError errors={state.fieldErrors.password?.map((message) => ({ message }))} />
         </Field>
 
         <Button
+          disabled={pending}
           type="submit"
           className="mt-1 h-auto w-full rounded-[var(--radius-button)] py-[15px] text-[15px] font-semibold shadow-[var(--shadow-cta)]"
         >
           {form.submit}
         </Button>
       </FieldGroup>
+
+      <p className='text-center text-red-700 font-medium text-lg mt-8 min-h-14'>
+        {state.formError ?? ''}
+      </p>
     </form>
   )
 }

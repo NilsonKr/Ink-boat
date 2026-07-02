@@ -5,13 +5,12 @@
 
 generator client {
   provider = "prisma-client"
-  output = "../src/lib/db/generated/"
+  output   = "../src/lib/db/generated/"
 }
 
 datasource db {
   provider = "postgresql"
 }
-
 
 // schema.prisma
 // Medium-style blogging app — initial schema
@@ -19,21 +18,81 @@ datasource db {
 
 // ---------------------------------------------------------------------------
 
+// ---------------------------------------------------------------------------
+
 model User {
-  id            BigInt   @id @default(autoincrement())
-  email         String   @unique
-  passwordHash  String   @map("password_hash") // argon2id / bcrypt — never plaintext
-  displayName   String?  @map("display_name")
-  emailVerified Boolean  @default(false) @map("email_verified")
-  createdAt     DateTime @default(now()) @map("created_at")
-  updatedAt     DateTime @updatedAt @map("updated_at")
+  id            String    @id
+  name          String
+  email         String
+  emailVerified Boolean   @default(false)
+  image         String?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  sessions      Session[]
+  accounts      Account[]
+  drafts        Draft[]
 
-  drafts Draft[]
-
-  @@map("users")
+  @@unique([email])
+  @@map("user")
 }
 
-// ---------------------------------------------------------------------------
+model Session {
+  id        String   @id
+  expiresAt DateTime
+  token     String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  ipAddress String?
+  userAgent String?
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([token])
+  @@index([userId])
+  @@map("session")
+}
+
+model Account {
+  id                    String    @id
+  accountId             String
+  providerId            String
+  userId                String
+  user                  User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  accessToken           String?
+  refreshToken          String?
+  idToken               String?
+  accessTokenExpiresAt  DateTime?
+  refreshTokenExpiresAt DateTime?
+  scope                 String?
+  password              String?
+  createdAt             DateTime  @default(now())
+  updatedAt             DateTime  @updatedAt
+
+  @@index([userId])
+  @@map("account")
+}
+
+model Verification {
+  id         String   @id
+  identifier String
+  value      String
+  expiresAt  DateTime
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  @@index([identifier])
+  @@map("verification")
+}
+
+model Jwks {
+  id         String    @id
+  publicKey  String
+  privateKey String
+  createdAt  DateTime
+  expiresAt  DateTime?
+
+  @@map("jwks")
+}
 
 enum DraftStatus {
   DRAFT
@@ -54,13 +113,15 @@ model Draft {
   createdAt   DateTime    @default(now()) @map("created_at")
   updatedAt   DateTime    @updatedAt @map("updated_at")
 
-  userId BigInt @map("user_id")
+  userId String @map("user_id")
   user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   media Media[]
 
-  @@index([userId, status]) // "my drafts", filterable by status
-  @@index([status, publishedAt]) // public feed of published posts, newest first
+  // "my drafts", filterable by status
+  // public feed of published posts, newest first
+  @@index([userId, status])
+  @@index([status, publishedAt])
   @@map("drafts")
 }
 

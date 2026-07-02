@@ -1,15 +1,26 @@
+'use client'
+import { useActionState } from 'react'
 import Link from "next/link"
+
+import { registerAction } from '@/actions/auth'
 
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
-import { Field, FieldGroup, FieldLabel } from "@/components/ui/field"
+import { Field, FieldGroup, FieldLabel, FieldError } from "@/components/ui/field"
 
 import { cn } from "@/lib/utils"
-import { REGISTER_COPY } from "@/lib/constants"
+import { REGISTER_COPY } from "@/lib/copy"
 
-import type { RegisterFormProps } from "@/types/auth"
+type ComponentProps = {
+  className: string
+}
 
-const RegisterForm: React.FC<RegisterFormProps> = ({ className }) => {
+const RegisterForm: React.FC<ComponentProps> = ({ className }) => {
+  const [state, formAction, pending] = useActionState(registerAction, {
+    fieldErrors: {},
+    formError: null,
+  })
+
   const { form } = REGISTER_COPY
 
   const inputClassName =
@@ -21,6 +32,7 @@ const RegisterForm: React.FC<RegisterFormProps> = ({ className }) => {
 
   return (
     <form
+      action={formAction}
       className={cn(
         "flex flex-col justify-center bg-muted p-8 text-[var(--text-strong)] md:p-[52px]",
         className
@@ -45,12 +57,18 @@ const RegisterForm: React.FC<RegisterFormProps> = ({ className }) => {
             {form.nameLabel}
           </FieldLabel>
           <Input
+            required
             id="name"
+            name="name"
             type="text"
+            minLength={2}
+            maxLength={60}
             placeholder={form.namePlaceholder}
             autoComplete="name"
+            aria-invalid={!!state.fieldErrors.name}
             className={inputClassName}
           />
+          <FieldError errors={state.fieldErrors.name?.map((message) => ({ message }))} />
         </Field>
 
         <Field>
@@ -58,12 +76,16 @@ const RegisterForm: React.FC<RegisterFormProps> = ({ className }) => {
             {form.emailLabel}
           </FieldLabel>
           <Input
+            required
             id="email"
             type="email"
+            name="email"
             placeholder={form.emailPlaceholder}
             autoComplete="email"
+            aria-invalid={!!state.fieldErrors.email}
             className={inputClassName}
           />
+          <FieldError errors={state.fieldErrors.email?.map((message) => ({ message }))} />
         </Field>
 
         <Field>
@@ -71,15 +93,22 @@ const RegisterForm: React.FC<RegisterFormProps> = ({ className }) => {
             {form.passwordLabel}
           </FieldLabel>
           <Input
+            required
             id="password"
             type="password"
+            name="password"
+            minLength={8}
+            maxLength={64}
             placeholder={form.passwordPlaceholder}
             autoComplete="new-password"
+            aria-invalid={!!state.fieldErrors.password}
             className={inputClassName}
           />
+          <FieldError errors={state.fieldErrors.password?.map((message) => ({ message }))} />
         </Field>
 
         <Button
+          disabled={pending}
           type="submit"
           className="mt-1 h-auto w-full rounded-[var(--radius-button)] py-[15px] text-[15px] font-semibold shadow-[var(--shadow-cta)]"
         >
@@ -87,21 +116,7 @@ const RegisterForm: React.FC<RegisterFormProps> = ({ className }) => {
         </Button>
       </FieldGroup>
 
-      <div className="my-6 flex items-center gap-3">
-        <span className="h-px flex-1 bg-[var(--line)]" />
-        <span className="font-mono text-[9px] uppercase tracking-[0.14em] text-[var(--text-label-color)]">
-          {form.divider}
-        </span>
-        <span className="h-px flex-1 bg-[var(--line)]" />
-      </div>
 
-      <Button
-        type="button"
-        variant="outline"
-        className="h-auto w-full rounded-[var(--radius-button)] bg-card py-[13px] text-[14px] font-medium"
-      >
-        {form.google}
-      </Button>
 
       <p className="mt-[22px] font-sans text-[12px] leading-normal text-[var(--text-label-color)]">
         {form.terms.prefix}{" "}
@@ -113,6 +128,10 @@ const RegisterForm: React.FC<RegisterFormProps> = ({ className }) => {
           {form.terms.privacyLink}
         </a>
         {form.terms.suffix}
+      </p>
+
+      <p className='text-center text-red-700 font-medium text-lg mt-8 min-h-14'>
+        {state.formError ?? ''}
       </p>
     </form>
   )

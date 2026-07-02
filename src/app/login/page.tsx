@@ -1,7 +1,7 @@
 import BrandPanel from "@/layout/auth/BrandPanel"
 import LoginForm from "@/layout/login/LoginForm"
 
-import { LOGIN_COPY } from "@/lib/constants"
+import { LOGIN_COPY } from "@/lib/copy"
 
 const LoginPage = () => {
   return (

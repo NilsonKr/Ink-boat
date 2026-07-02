@@ -61,7 +61,3 @@ export type RegisterCopy = {
   brand: AuthBrandCopy
   form: RegisterFormCopy
 }
-
-export type RegisterFormProps = {
-  className?: string
-}
