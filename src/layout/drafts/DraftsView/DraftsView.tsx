@@ -28,7 +28,7 @@ const DraftsView: React.FC<DraftsViewProps> = ({ drafts, copy }) => {
       all: drafts.length,
       draft: drafts.filter((draft) => draft.status === "draft").length,
       published: drafts.filter((draft) => draft.status === "published").length,
-      scheduled: drafts.filter((draft) => draft.status === "scheduled").length,
+      archived: drafts.filter((draft) => draft.status === "archived").length,
     }),
     [drafts]
   )
@@ -37,7 +37,7 @@ const DraftsView: React.FC<DraftsViewProps> = ({ drafts, copy }) => {
     { key: "all", label: copy.filters.all },
     { key: "draft", label: copy.filters.draft },
     { key: "published", label: copy.filters.published },
-    { key: "scheduled", label: copy.filters.scheduled },
+    { key: "archived", label: copy.filters.archived },
   ]
 
   const visibleDrafts = useMemo(
@@ -80,7 +80,7 @@ const DraftsView: React.FC<DraftsViewProps> = ({ drafts, copy }) => {
 
         <div className="mt-2">
           {visibleDrafts.map((draft, index) => (
-            <DraftRow key={draft.id} draft={draft} index={index} />
+            <DraftRow key={draft.publicId} draft={draft} index={index} />
           ))}
         </div>
       </div>

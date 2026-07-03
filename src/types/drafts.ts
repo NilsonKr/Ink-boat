@@ -1,13 +1,13 @@
-export type DraftStatus = 'draft' | 'published' | 'scheduled'
+export type DraftStatus = 'draft' | 'published' | 'archived'
 
 export type Draft = {
-  id: string
+  publicId: string
   title: string
-  excerpt: string
+  description: string
   status: DraftStatus
-  words: number
-  readTime: string
-  editedAt: string
+  updatedAt: Date
+  words?: number
+  readTime?: string
 }
 
 export type StatusMeta = {

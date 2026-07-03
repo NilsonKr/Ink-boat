@@ -65,6 +65,6 @@ export const DRAFTS_COPY: DraftsCopy = {
     all: 'All',
     draft: 'Drafts',
     published: 'Published',
-    scheduled: 'Scheduled',
+    archived: 'Archived',
   },
 }

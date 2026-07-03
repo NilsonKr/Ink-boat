@@ -1,3 +1,6 @@
+
+import { getDraftListAction } from '@/actions/drafts'
+
 import DraftsView from "@/layout/drafts/DraftsView"
 
 import { DRAFTS_COPY } from "@/lib/copy"
@@ -6,69 +9,71 @@ import type { Draft } from "@/types/drafts"
 
 const DRAFTS: Draft[] = [
   {
-    id: "1",
+    publicId: "1",
     title: "The Quiet Architecture of Mornings",
-    excerpt:
+    description:
       "What three years of waking before dawn taught me about attention, ritual, and the shape of an empty hour.",
     status: "draft",
     words: 1240,
     readTime: "5 min",
-    editedAt: "2h ago",
+    updatedAt: new Date(),
   },
   {
-    id: "2",
+    publicId: "2",
     title: "Notes on Leaving the City",
-    excerpt:
+    description:
       "I traded the noise for a field and a slower kind of restlessness. A reckoning, in twelve parts.",
     status: "published",
     words: 2680,
     readTime: "11 min",
-    editedAt: "Yesterday",
+    updatedAt: new Date()
   },
   {
-    id: "3",
+    publicId: "3",
     title: "Why I Stopped Measuring My Days",
-    excerpt:
+    description:
       "The productivity dashboards promised clarity. What they delivered was a quieter kind of dread.",
     status: "draft",
     words: 540,
     readTime: "2 min",
-    editedAt: "4d ago",
+    updatedAt: new Date(),
   },
   {
-    id: "4",
+    publicId: "4",
     title: "A Field Guide to Slow Software",
-    excerpt:
+    description:
       "In praise of tools that wait for you — and the designers brave enough to build them.",
-    status: "scheduled",
+    status: "archived",
     words: 1890,
     readTime: "8 min",
-    editedAt: "Jun 18",
+    updatedAt: new Date(),
   },
   {
-    id: "5",
+    publicId: "5",
     title: "On Keeping a Commonplace Book",
-    excerpt:
+    description:
       "For four hundred years, readers hoarded sentences. I started again, by hand, and everything changed.",
     status: "published",
     words: 1430,
     readTime: "6 min",
-    editedAt: "Jun 12",
+    updatedAt: new Date(),
   },
   {
-    id: "6",
+    publicId: "6",
     title: "The Year I Read Nothing New",
-    excerpt:
+    description:
       "A diet of only rereads. What returning to old books revealed about who I used to be.",
     status: "draft",
     words: 320,
     readTime: "1 min",
-    editedAt: "Jun 9",
+    updatedAt: new Date(),
   },
 ]
 
-const DraftsPage = () => {
-  return <DraftsView drafts={DRAFTS} copy={DRAFTS_COPY} />
+const DraftsPage = async () => {
+  const draftList = await getDraftListAction()
+
+  return <DraftsView drafts={draftList} copy={DRAFTS_COPY} />
 }
 
 export default DraftsPage

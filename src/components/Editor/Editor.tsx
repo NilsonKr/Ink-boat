@@ -1,15 +1,18 @@
 'use client'
-import { saveDraftAction } from '@/actions/drafts'
-
-import { useEditor, EditorContent, JSONContent } from '@tiptap/react'
+import { useEditor, EditorContent, JSONContent, Content } from '@tiptap/react'
 import StarterKit from '@tiptap/starter-kit'
 
 import { Button } from '@/components/ui/button'
 
-export const Editor = () => {
+type ComponentProps = {
+  content?: Content | null
+  saveDraft: (json: JSONContent) => void
+}
+
+export const Editor: React.FC<ComponentProps> = ({ saveDraft, content }) => {
   const editor = useEditor({
     extensions: [StarterKit],
-    content: '<p>Hello World! 🌎️</p>',
+    content: content ?? '<p>Hello World! 🌎️</p>',
     editorProps: {
       attributes: {
         // class: 'bg-(--paper-100) h-screen'
@@ -21,7 +24,7 @@ export const Editor = () => {
 
   return <>
     <EditorContent editor={editor} />
-    <Button onClick={() => saveDraftAction(editor?.getJSON() as JSONContent)}>
+    <Button onClick={() => saveDraft(editor?.getJSON() as JSONContent)}>
       Save
     </Button>
   </>

@@ -1,5 +1,5 @@
 'use client'
-// import { logoutAction } from '@/actions/auth'
+import { saveDraftAction } from '@/actions/drafts'
 
 import Editor from '@/components/Editor'
 
@@ -14,7 +14,7 @@ const page = () => {
           What waking before dawn taught me about attention.
         </p>
         <section className='mt-20'>
-          <Editor />
+          <Editor saveDraft={saveDraftAction} />
         </section>
       </section>
     </section>

@@ -183,10 +183,10 @@
   /* — Status (functional, not brand) — */
   --status-draft: #b58e12;
   --status-published: #5b7a4f;
-  --status-scheduled: #6e3551;
+  --status-archived: #6e3551;
   --status-draft-tint: rgba(181, 142, 18, 0.12);
   --status-published-tint: rgba(91, 122, 79, 0.12);
-  --status-scheduled-tint: rgba(110, 53, 81, 0.12);
+  --status-archived-tint: rgba(110, 53, 81, 0.12);
 
   /* — Brand semantic aliases — */
   --surface-app: var(--sand-200);

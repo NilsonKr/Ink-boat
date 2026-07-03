@@ -11,10 +11,10 @@ export const STATUS_META: Record<DraftStatus, StatusMeta> = {
     color: 'var(--status-published)',
     tint: 'var(--status-published-tint)',
   },
-  scheduled: {
-    label: 'Scheduled',
-    color: 'var(--status-scheduled)',
-    tint: 'var(--status-scheduled-tint)',
+  archived: {
+    label: 'Archived',
+    color: 'var(--status-archived)',
+    tint: 'var(--status-archived-tint)',
   },
 }
 

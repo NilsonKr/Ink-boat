@@ -8,6 +8,8 @@ import type { Prisma } from '@/lib/db/generated/client'
 import { auth } from '@/lib/auth'
 import { prisma } from '@/lib/prisma'
 
+import type { Draft, DraftStatus } from '@/types/drafts'
+
 export const saveDraftAction = async (json: JSONContent) => {
   const session = await auth.api.getSession({ headers: await headers() })
 
@@ -26,7 +28,7 @@ export const saveDraftAction = async (json: JSONContent) => {
   return draft
 }
 
-export const getDraftsAction = async () => {
+export const getDraftListAction = async (): Promise<Draft[]> => {
   const session = await auth.api.getSession({ headers: await headers() })
 
   if (!session) return redirect('/login')
@@ -36,11 +38,36 @@ export const getDraftsAction = async () => {
     select: {
       publicId: true,
       title: true,
+      description: true,
       status: true,
       updatedAt: true,
     },
     orderBy: { updatedAt: 'desc' },
   })
 
+  return drafts.map((draft) => ({
+    ...draft,
+    status: draft.status.toLowerCase() as DraftStatus,
+  }))
+}
+
+export const getDraftAction = async (slug: string) => {
+  const session = await auth.api.getSession({ headers: await headers() })
+
+  if (!session) return redirect('/login')
+
+  const drafts = await prisma.draft.findUnique({
+    where: { publicId: slug, userId: session.user.id, },
+    select: {
+      publicId: true,
+      title: true,
+      description: true,
+      status: true,
+      content: true,
+      updatedAt: true,
+    }
+  })
+
   return drafts
 }
+

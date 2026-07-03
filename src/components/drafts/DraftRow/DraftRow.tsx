@@ -1,12 +1,10 @@
-// React / third-party imports
+'use client'
+import { useRouter } from "next/navigation"
 
-// component imports
 import StatusBadge from "@/components/drafts/StatusBadge"
 
-// utils, constants imports
 import { formatWords } from "@/lib/drafts"
 
-// types imports
 import type { Draft } from "@/types/drafts"
 
 type DraftRowProps = {
@@ -15,10 +13,11 @@ type DraftRowProps = {
 }
 
 const DraftRow: React.FC<DraftRowProps> = ({ draft, index }) => {
+  const router = useRouter()
   const num = String(index + 1).padStart(2, "0")
 
   return (
-    <div className="group -mx-[18px] grid cursor-pointer grid-cols-[34px_60px_1fr_auto] items-start gap-6 rounded-[2px] border-b border-[var(--line)] px-[18px] py-[30px] transition-colors hover:bg-[var(--plum-100)]">
+    <article onClick={() => router.push(`/drafts/${draft.publicId}`)} className="group -mx-[18px] grid cursor-pointer grid-cols-[34px_60px_1fr_auto] items-start gap-6 rounded-[2px] border-b border-[var(--line)] px-[18px] py-[30px] transition-colors hover:bg-[var(--plum-100)]">
       <span className="pt-[6px] font-mono text-[12px] text-[var(--text-label-color)]">
         {num}
       </span>
@@ -36,10 +35,10 @@ const DraftRow: React.FC<DraftRowProps> = ({ draft, index }) => {
           {draft.title}
         </h3>
         <p className="mb-[12px] max-w-[50ch] font-display text-[15.5px] leading-[1.45] text-[var(--text-muted-color)]">
-          {draft.excerpt}
+          {draft.description}
         </p>
         <p className="font-mono text-[10px] uppercase tracking-[0.12em] text-[var(--text-label-color)]">
-          {draft.readTime} · {formatWords(draft.words)} · Edited {draft.editedAt}
+          {draft?.readTime ?? ''} · {formatWords(draft?.words ?? 0)} · Edited {draft.updatedAt.toLocaleDateString()}
         </p>
       </div>
 
@@ -49,7 +48,7 @@ const DraftRow: React.FC<DraftRowProps> = ({ draft, index }) => {
           →
         </span>
       </div>
-    </div>
+    </article>
   )
 }
 
