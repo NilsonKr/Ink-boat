@@ -1,6 +1,6 @@
 import type { Content } from '@tiptap/react'
 
-import { getDraftAction, saveDraftAction } from '@/actions/drafts'
+import { getDraftAction } from '@/actions/drafts'
 
 import Editor from '@/components/Editor'
 
@@ -23,7 +23,10 @@ const Page: React.FC<ComponentProps> = async ({ params }) => {
           What waking before dawn taught me about attention.
         </p>
         <section className='mt-20'>
-          <Editor saveDraft={saveDraftAction} content={draft?.content as Content} />
+          <Editor
+            publicId={slug}
+            content={draft?.content as Content}
+          />
         </section>
       </section>
     </section>

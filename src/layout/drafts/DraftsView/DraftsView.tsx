@@ -1,5 +1,6 @@
 "use client"
 // React / third-party imports
+import Link from 'next/link'
 import { useMemo, useState } from "react"
 
 // component imports
@@ -61,10 +62,10 @@ const DraftsView: React.FC<DraftsViewProps> = ({ drafts, copy }) => {
             </h1>
           </div>
 
-          <Button className="h-auto gap-[9px] rounded-[var(--radius-button)] bg-[var(--marigold-500)] px-[22px] py-[13px] text-[14.5px] font-semibold text-[var(--on-accent)] shadow-[var(--shadow-cta)] hover:bg-[var(--marigold-700)]">
+          <Link href='/drafts/new-draft' className="flex h-auto items-end gap-[9px] rounded-[var(--radius-button)] bg-[var(--marigold-500)] px-[22px] py-[13px] text-[14.5px] font-semibold text-[var(--on-accent)] shadow-[var(--shadow-cta)] hover:bg-[var(--marigold-700)]">
             <span className="font-display text-[18px] leading-none">✎</span>
             {copy.newDraft}
-          </Button>
+          </Link>
         </div>
 
         <p className="mt-4 font-display text-[19px] italic text-[var(--text-muted-color)]">

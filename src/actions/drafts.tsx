@@ -2,7 +2,7 @@
 
 import { headers } from 'next/headers'
 import { redirect } from 'next/navigation'
-import type { JSONContent } from '@tiptap/react'
+import type { Content } from '@tiptap/react'
 import type { Prisma } from '@/lib/db/generated/client'
 
 import { auth } from '@/lib/auth'
@@ -10,7 +10,7 @@ import { prisma } from '@/lib/prisma'
 
 import type { Draft, DraftStatus } from '@/types/drafts'
 
-export const saveDraftAction = async (json: JSONContent) => {
+export const saveDraftAction = async (json: Content) => {
   const session = await auth.api.getSession({ headers: await headers() })
 
   if (!session) return redirect('/login')
@@ -22,7 +22,7 @@ export const saveDraftAction = async (json: JSONContent) => {
       content: json as Prisma.InputJsonValue,
       userId: session.user.id,
     },
-    select: { publicId: true, updatedAt: true },
+    select: { publicId: true },
   })
 
   return draft
@@ -49,6 +49,20 @@ export const getDraftListAction = async (): Promise<Draft[]> => {
     ...draft,
     status: draft.status.toLowerCase() as DraftStatus,
   }))
+}
+
+export const updateDraftAction = async (slug: string, json: Content) => {
+  const session = await auth.api.getSession({ headers: await headers() })
+
+  if (!session) return redirect('/login')
+
+  const draft = await prisma.draft.update({
+    where: { publicId: slug, userId: session.user.id },
+    data: { content: json as Prisma.InputJsonValue },
+    select: { publicId: true },
+  })
+
+  return draft
 }
 
 export const getDraftAction = async (slug: string) => {
