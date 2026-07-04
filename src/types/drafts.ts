@@ -30,3 +30,8 @@ export type DraftsCopy = {
   newDraft: string
   filters: Record<DraftsFilter, string>
 }
+
+export type DraftMetadata = {
+  title: string
+  description: string
+}

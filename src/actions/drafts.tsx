@@ -8,25 +8,7 @@ import type { Prisma } from '@/lib/db/generated/client'
 import { auth } from '@/lib/auth'
 import { prisma } from '@/lib/prisma'
 
-import type { Draft, DraftStatus } from '@/types/drafts'
-
-export const saveDraftAction = async (json: Content) => {
-  const session = await auth.api.getSession({ headers: await headers() })
-
-  if (!session) return redirect('/login')
-
-  const draft = await prisma.draft.create({
-    data: {
-      title: 'The Quiet Architecture of Mornings',
-      description: 'What waking before dawn taught me about attention.',
-      content: json as Prisma.InputJsonValue,
-      userId: session.user.id,
-    },
-    select: { publicId: true },
-  })
-
-  return draft
-}
+import type { Draft, DraftStatus, DraftMetadata } from '@/types/drafts'
 
 export const getDraftListAction = async (): Promise<Draft[]> => {
   const session = await auth.api.getSession({ headers: await headers() })
@@ -51,20 +33,6 @@ export const getDraftListAction = async (): Promise<Draft[]> => {
   }))
 }
 
-export const updateDraftAction = async (slug: string, json: Content) => {
-  const session = await auth.api.getSession({ headers: await headers() })
-
-  if (!session) return redirect('/login')
-
-  const draft = await prisma.draft.update({
-    where: { publicId: slug, userId: session.user.id },
-    data: { content: json as Prisma.InputJsonValue },
-    select: { publicId: true },
-  })
-
-  return draft
-}
-
 export const getDraftAction = async (slug: string) => {
   const session = await auth.api.getSession({ headers: await headers() })
 
@@ -83,5 +51,40 @@ export const getDraftAction = async (slug: string) => {
   })
 
   return drafts
+}
+
+
+export const saveDraftAction = async (json: Content, metadata?: DraftMetadata) => {
+  const session = await auth.api.getSession({ headers: await headers() })
+
+  if (!session) return redirect('/login')
+
+  const draft = await prisma.draft.create({
+    data: {
+      ...(json ? { content: json as Prisma.InputJsonValue } : {}),
+      ...(metadata ? metadata : {}),
+      userId: session.user.id,
+    },
+    select: { publicId: true },
+  })
+
+  return draft
+}
+
+export const updateDraftAction = async (slug: string, json: Content, metadata?: DraftMetadata) => {
+  const session = await auth.api.getSession({ headers: await headers() })
+
+  if (!session) return redirect('/login')
+
+  const draft = await prisma.draft.update({
+    where: { publicId: slug, userId: session.user.id },
+    data: {
+      ...(json ? { content: json as Prisma.InputJsonValue } : {}),
+      ...(metadata ? metadata : {})
+    },
+    select: { publicId: true },
+  })
+
+  return draft
 }
 
