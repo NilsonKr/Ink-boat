@@ -30,7 +30,7 @@ const FilterRail: React.FC<FilterRailProps> = ({
             type="button"
             onClick={() => onChange(tab.key)}
             className={cn(
-              "-mb-[2px] flex items-center gap-[7px] border-b-2 pb-[14px] font-mono text-[11px] uppercase tracking-[0.12em] transition-colors",
+              "-mb-[2px] flex items-center gap-[7px] border-b-2 pb-[14px] font-mono text-[11px] uppercase tracking-[0.12em] cursor-pointer transition-colors",
               isActive
                 ? "border-[var(--marigold-500)] text-[var(--text-strong)]"
                 : "border-transparent text-[var(--text-muted-color)] hover:text-[var(--text-strong)]"

@@ -24,15 +24,21 @@ type DraftActionPayload = {
 }
 
 export const Editor: React.FC<ComponentProps> = ({ content, publicId, title, description }) => {
-  const [draft, saveDraft, pending] = useActionState(
+  const [draft, saveDraft] = useActionState(
     async (_: any, payload: DraftActionPayload) => {
       const res = await saveDraftAction(payload.json, payload.metadata)
 
+      setIsSaved(true)
       window.history.replaceState(null, '', `/drafts/${res.publicId}`)
       return res
     }, null)
 
+  const saveDraftTransition = (json: Content, metadata?: DraftMetadata) => {
+    startTransition(() => saveDraft({ json, ...(metadata ? { metadata } : {}) }))
+  }
+
   const [draftMetada, setDraftMetadata] = useState<DraftMetadata>({ title: title ?? '', description: description ?? '' })
+  const [isSaved, setIsSaved] = useState<boolean>(true)
 
   const editor = useEditor({
     extensions: [StarterKit],
@@ -44,27 +50,32 @@ export const Editor: React.FC<ComponentProps> = ({ content, publicId, title, des
     },
     immediatelyRender: false,
     onUpdate({ editor }) {
+      setIsSaved(false)
       updateSaveActionDebounced(editor?.getJSON() as Content)
     },
   })
+
+  const updateAction = async (slug: string, json: Content, metadata?: DraftMetadata) => {
+    const res = await updateDraftAction(slug, json, metadata)
+
+    setIsSaved(true)
+    return res
+  }
 
   const updateSaveActionDebounced = useMemo(() =>
     debounce((json: Content, metadata?: DraftMetadata) => {
       const draftSlug = publicId ?? draft?.publicId
 
       return draftSlug ?
-        updateDraftAction(publicId ?? draft?.publicId!, json, metadata)
+        updateAction(publicId ?? draft?.publicId!, json, metadata)
         :
         saveDraftTransition(json, metadata)
 
     }, 1000),
     [publicId, draft])
 
-  const saveDraftTransition = (json: Content, metadata?: DraftMetadata) => {
-    startTransition(() => saveDraft({ json, ...(metadata ? { metadata } : {}) }))
-  }
-
   const handleSaveMetadata = (key: string, value: string) => {
+    setIsSaved(false)
     setDraftMetadata(prev => {
       const newMetadata = { ...prev, [key]: value }
 
@@ -74,10 +85,10 @@ export const Editor: React.FC<ComponentProps> = ({ content, publicId, title, des
     })
   }
 
-  const draftSlug = publicId ?? draft?.publicId
-
   return <>
-
+    <p className='min-h-[28px] font-display text-(--text-muted-color) text-xl text-end' >
+      {isSaved && 'Saved'}
+    </p>
     <textarea
       rows={1}
       placeholder="Title"
@@ -108,14 +119,14 @@ export const Editor: React.FC<ComponentProps> = ({ content, publicId, title, des
 
     <section className='mt-20'>
       <EditorContent editor={editor} />
-      <Button
+      {/* <Button
         onClick={() => draftSlug ?
           updateSaveActionDebounced(editor?.getJSON() as Content)
           :
           saveDraftTransition(editor?.getJSON() as Content)}
       >
         Save
-      </Button>
+      </Button> */}
     </section>
   </>
 }

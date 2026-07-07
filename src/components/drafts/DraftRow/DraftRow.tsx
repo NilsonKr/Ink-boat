@@ -32,10 +32,10 @@ const DraftRow: React.FC<DraftRowProps> = ({ draft, index }) => {
 
       <div>
         <h3 className="mb-[8px] font-display text-[24px] font-medium leading-[1.12] tracking-[-0.012em]">
-          {draft.title}
+          {draft.title ? draft.title : 'Untitled'}
         </h3>
         <p className="mb-[12px] max-w-[50ch] font-display text-[15.5px] leading-[1.45] text-[var(--text-muted-color)]">
-          {draft.description}
+          {draft.description ? draft.description : 'Add a description for this blog'}
         </p>
         <p className="font-mono text-[10px] uppercase tracking-[0.12em] text-[var(--text-label-color)]">
           {draft?.readTime ?? ''} · {formatWords(draft?.words ?? 0)} · Edited {draft.updatedAt.toLocaleDateString()}
