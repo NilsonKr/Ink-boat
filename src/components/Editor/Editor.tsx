@@ -1,29 +1,133 @@
 'use client'
-import { saveDraftAction } from '@/actions/drafts'
-
-import { useEditor, EditorContent, JSONContent } from '@tiptap/react'
+import { startTransition, useActionState, useMemo, useState } from 'react'
+import { useEditor, EditorContent, Content } from '@tiptap/react'
 import StarterKit from '@tiptap/starter-kit'
+
+import { saveDraftAction, updateDraftAction } from '@/actions/drafts'
 
 import { Button } from '@/components/ui/button'
 
-export const Editor = () => {
+import { debounce } from '@/lib/utils'
+
+import type { DraftMetadata } from '@/types/drafts'
+
+type ComponentProps = {
+  content?: Content | null
+  publicId?: string | null
+  title?: string
+  description?: string
+}
+
+type DraftActionPayload = {
+  json: Content
+  metadata?: DraftMetadata
+}
+
+export const Editor: React.FC<ComponentProps> = ({ content, publicId, title, description }) => {
+  const [draft, saveDraft] = useActionState(
+    async (_: any, payload: DraftActionPayload) => {
+      const res = await saveDraftAction(payload.json, payload.metadata)
+
+      setIsSaved(true)
+      window.history.replaceState(null, '', `/drafts/${res.publicId}`)
+      return res
+    }, null)
+
+  const saveDraftTransition = (json: Content, metadata?: DraftMetadata) => {
+    startTransition(() => saveDraft({ json, ...(metadata ? { metadata } : {}) }))
+  }
+
+  const [draftMetada, setDraftMetadata] = useState<DraftMetadata>({ title: title ?? '', description: description ?? '' })
+  const [isSaved, setIsSaved] = useState<boolean>(true)
+
   const editor = useEditor({
     extensions: [StarterKit],
-    content: '<p>Hello World! 🌎️</p>',
+    content: content ?? '<p>Hello World! 🌎️</p>',
     editorProps: {
       attributes: {
         // class: 'bg-(--paper-100) h-screen'
       }
     },
-    // Don't render immediately on the server to avoid SSR issues
     immediatelyRender: false,
+    onUpdate({ editor }) {
+      setIsSaved(false)
+      updateSaveActionDebounced(editor?.getJSON() as Content)
+    },
   })
 
+  const updateAction = async (slug: string, json: Content, metadata?: DraftMetadata) => {
+    const res = await updateDraftAction(slug, json, metadata)
+
+    setIsSaved(true)
+    return res
+  }
+
+  const updateSaveActionDebounced = useMemo(() =>
+    debounce((json: Content, metadata?: DraftMetadata) => {
+      const draftSlug = publicId ?? draft?.publicId
+
+      return draftSlug ?
+        updateAction(publicId ?? draft?.publicId!, json, metadata)
+        :
+        saveDraftTransition(json, metadata)
+
+    }, 1000),
+    [publicId, draft])
+
+  const handleSaveMetadata = (key: string, value: string) => {
+    setIsSaved(false)
+    setDraftMetadata(prev => {
+      const newMetadata = { ...prev, [key]: value }
+
+      updateSaveActionDebounced(null, newMetadata)
+
+      return newMetadata
+    })
+  }
+
   return <>
-    <EditorContent editor={editor} />
-    <Button onClick={() => saveDraftAction(editor?.getJSON() as JSONContent)}>
-      Save
-    </Button>
+    <p className='min-h-[28px] font-display text-(--text-muted-color) text-xl text-end' >
+      {isSaved && 'Saved'}
+    </p>
+    <textarea
+      rows={1}
+      placeholder="Title"
+      name="title"
+      value={draftMetada.title}
+      onChange={({ target }) => handleSaveMetadata('title', target.value)}
+      className="
+        w-full text-6xl font-medium font-display resize-none border-none bg-transparent outline-none
+        field-sizing-content overflow-hidden
+        leading-tight
+        placeholder:text-stone-300
+      "
+    />
+    <textarea
+      rows={1}
+      name='description'
+      placeholder="Description"
+      value={draftMetada.description}
+      onChange={({ target }) => handleSaveMetadata('description', target.value)}
+      className="
+       w-full text-2xl font-display text-(--text-muted-color) mt-1
+       resize-none border-none bg-transparent outline-none
+        field-sizing-content overflow-hidden
+        leading-tight
+        placeholder:text-stone-300
+      "
+    />
+
+    <section className='mt-20'>
+      <EditorContent editor={editor} />
+      {/* <Button
+        onClick={() => draftSlug ?
+          updateSaveActionDebounced(editor?.getJSON() as Content)
+          :
+          saveDraftTransition(editor?.getJSON() as Content)}
+      >
+        Save
+      </Button> */}
+    </section>
   </>
 }
 
