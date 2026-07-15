@@ -1,11 +1,12 @@
 'use client'
-import { startTransition, useActionState, useMemo, useState } from 'react'
+import { startTransition, useActionState, useEffect, useMemo, useState } from 'react'
 import { useEditor, EditorContent, Content } from '@tiptap/react'
 import StarterKit from '@tiptap/starter-kit'
 
 import { saveDraftAction, updateDraftAction } from '@/actions/drafts'
 
 import { Button } from '@/components/ui/button'
+import AIPanel from '@/components/Editor/AIPanel'
 
 import { debounce } from '@/lib/utils'
 
@@ -39,6 +40,19 @@ export const Editor: React.FC<ComponentProps> = ({ content, publicId, title, des
 
   const [draftMetada, setDraftMetadata] = useState<DraftMetadata>({ title: title ?? '', description: description ?? '' })
   const [isSaved, setIsSaved] = useState<boolean>(true)
+  const [isAIPanelOpen, setIsAIPanelOpen] = useState<boolean>(false)
+
+  useEffect(() => {
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if ((event.metaKey || event.ctrlKey) && event.key.toLowerCase() === 'k') {
+        event.preventDefault()
+        setIsAIPanelOpen(prev => !prev)
+      }
+    }
+
+    document.addEventListener('keydown', handleKeyDown)
+    return () => document.removeEventListener('keydown', handleKeyDown)
+  }, [])
 
   const editor = useEditor({
     extensions: [StarterKit],
@@ -128,6 +142,8 @@ export const Editor: React.FC<ComponentProps> = ({ content, publicId, title, des
         Save
       </Button> */}
     </section>
+
+    <AIPanel open={isAIPanelOpen} onClose={() => setIsAIPanelOpen(false)} />
   </>
 }
 
