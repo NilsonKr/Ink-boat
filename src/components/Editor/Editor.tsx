@@ -1,17 +1,18 @@
 'use client'
 import { startTransition, useActionState, useEffect, useMemo, useState } from 'react'
-import { useEditor, EditorContent, Content } from '@tiptap/react'
+import { useEditor, EditorContent, type Content } from '@tiptap/react'
 import StarterKit from '@tiptap/starter-kit'
+import Highlight from '@tiptap/extension-highlight'
 
 import { saveDraftAction, updateDraftAction } from '@/actions/drafts'
 
-import { Button } from '@/components/ui/button'
 import AIPanel from '@/components/Editor/AIPanel'
 import Caret from '@/components/Editor/Caret'
 import SelectionToolbar from '@/components/Editor/SelectionToolbar'
 import { EnterNewParagraph } from '@/components/Editor/extensions/EnterNewParagraph'
+import { ClickBelowContent } from '@/components/Editor/extensions/ClickBelowContent'
 
-import { debounce } from '@/lib/utils'
+import { debounce, getSerializableContent, trimTrailingEmptyParagraphs } from '@/lib/utils'
 
 import '@/components/Editor/editor.css'
 
@@ -28,6 +29,7 @@ type DraftActionPayload = {
   json: Content
   metadata?: DraftMetadata
 }
+
 
 export const Editor: React.FC<ComponentProps> = ({ content, publicId, title, description }) => {
   const [draft, saveDraft] = useActionState(
@@ -60,8 +62,13 @@ export const Editor: React.FC<ComponentProps> = ({ content, publicId, title, des
   }, [])
 
   const editor = useEditor({
-    extensions: [StarterKit, EnterNewParagraph],
-    content: content ?? '',
+    extensions: [
+      StarterKit.configure({ link: { openOnClick: false }, trailingNode: false }),
+      Highlight.configure({ multicolor: true }),
+      EnterNewParagraph,
+      ClickBelowContent,
+    ],
+    content: trimTrailingEmptyParagraphs(content),
     editorProps: {
       attributes: {
         class: 'tiptap focus:outline-none',
@@ -70,7 +77,7 @@ export const Editor: React.FC<ComponentProps> = ({ content, publicId, title, des
     immediatelyRender: false,
     onUpdate({ editor }) {
       setIsSaved(false)
-      updateSaveActionDebounced(editor?.getJSON() as Content)
+      updateSaveActionDebounced(getSerializableContent(editor))
     },
   })
 
@@ -140,14 +147,6 @@ export const Editor: React.FC<ComponentProps> = ({ content, publicId, title, des
       <EditorContent editor={editor} />
       <Caret editor={editor} />
       <SelectionToolbar editor={editor} />
-      {/* <Button
-        onClick={() => draftSlug ?
-          updateSaveActionDebounced(editor?.getJSON() as Content)
-          :
-          saveDraftTransition(editor?.getJSON() as Content)}
-      >
-        Save
-      </Button> */}
     </section>
 
     <AIPanel open={isAIPanelOpen} onClose={() => setIsAIPanelOpen(false)} />
