@@ -2,6 +2,7 @@
 import { useEffect, useRef, useState } from 'react'
 
 import { anthropicMessage } from '@/actions/anthropic'
+import { geminiMessage } from '@/actions/gemini'
 
 type AIPanelProps = {
   open: boolean
@@ -88,7 +89,7 @@ const AIPanel: React.FC<AIPanelProps> = ({ open, onClose, selectedWordCount = 0 
         {/* actions */}
         <div className="flex items-center gap-2 px-4 pt-[6px] pb-[14px]">
           <button
-            onClick={anthropicMessage}
+            onClick={geminiMessage}
             className="flex cursor-pointer items-center gap-2 rounded-[10px] border-none bg-(--espresso-800) px-[15px] py-[10px] font-sans text-[12.5px] font-semibold text-(--text-on-dark) transition-colors duration-100 hover:bg-(--espresso-900)">
             Apply{' '}
             <span className="rounded-[4px] border border-white/30 px-[6px] py-[2px] font-mono text-[9px] opacity-70">
