@@ -301,6 +301,26 @@
   --sidebar-ring: var(--marigold-500);
 }
 
+@keyframes glowline {
+  0% {
+    background-position: 0% 50%;
+  }
+  100% {
+    background-position: 200% 50%;
+  }
+}
+
+.gradline {
+  background: linear-gradient(
+    90deg,
+    oklch(0.55 0.13 340),
+    oklch(0.78 0.14 80),
+    oklch(0.55 0.13 340)
+  );
+  background-size: 200% 100%;
+  animation: glowline 4s linear infinite;
+}
+
 @layer base {
   * {
     @apply border-border outline-ring/50;
