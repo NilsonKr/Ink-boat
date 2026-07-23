@@ -10,6 +10,18 @@
   caret-color: transparent;
 }
 
+/* Selection: marigold wash with a solid rule underneath, per the design doc.
+   ::selection can't take box-shadow, so the rule is a text-decoration. */
+.tiptap ::selection,
+.tiptap::selection {
+  background: var(--marigold-100);
+  color: var(--text-strong);
+  text-decoration: underline;
+  text-decoration-color: var(--marigold-500);
+  text-decoration-thickness: 2px;
+  text-underline-offset: 3px;
+}
+
 /* Rendered caret: wider than the native bar, breathing in place. */
 .editor-caret {
   position: absolute;

@@ -8,6 +8,7 @@ import { saveDraftAction, updateDraftAction } from '@/actions/drafts'
 import { Button } from '@/components/ui/button'
 import AIPanel from '@/components/Editor/AIPanel'
 import Caret from '@/components/Editor/Caret'
+import SelectionToolbar from '@/components/Editor/SelectionToolbar'
 import { EnterNewParagraph } from '@/components/Editor/extensions/EnterNewParagraph'
 
 import { debounce } from '@/lib/utils'
@@ -138,6 +139,7 @@ export const Editor: React.FC<ComponentProps> = ({ content, publicId, title, des
     <section className='relative mt-20'>
       <EditorContent editor={editor} />
       <Caret editor={editor} />
+      <SelectionToolbar editor={editor} />
       {/* <Button
         onClick={() => draftSlug ?
           updateSaveActionDebounced(editor?.getJSON() as Content)
