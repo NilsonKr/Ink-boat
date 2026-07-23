@@ -8,6 +8,7 @@ import { saveDraftAction, updateDraftAction } from '@/actions/drafts'
 
 import AIPanel from '@/components/Editor/AIPanel'
 import Caret from '@/components/Editor/Caret'
+import InsertMenu from '@/components/Editor/InsertMenu'
 import SelectionToolbar from '@/components/Editor/SelectionToolbar'
 import { EnterNewParagraph } from '@/components/Editor/extensions/EnterNewParagraph'
 
@@ -145,6 +146,7 @@ export const Editor: React.FC<ComponentProps> = ({ content, publicId, title, des
       <EditorContent editor={editor} />
       <Caret editor={editor} />
       <SelectionToolbar editor={editor} />
+      <InsertMenu />
     </section>
 
     <AIPanel open={isAIPanelOpen} onClose={() => setIsAIPanelOpen(false)} />

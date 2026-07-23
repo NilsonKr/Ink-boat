@@ -12,3 +12,12 @@ export const HIGHLIGHT_COLORS: { name: string; value: string }[] = [
   { name: 'sage', value: '#cfe0c9' },
   { name: 'sky', value: '#d6e2ec' },
 ]
+
+/** Blocks offered by the insert rail on an empty line. */
+export const INSERT_BLOCKS: { name: string; icon: string; iconFont: 'display' | 'mono' }[] = [
+  { name: 'Image', icon: '✦', iconFont: 'display' },
+  { name: 'Quote', icon: '❝', iconFont: 'display' },
+  { name: 'Divider', icon: '—', iconFont: 'display' },
+  { name: 'Code', icon: '</>', iconFont: 'mono' },
+  { name: 'Embed', icon: '⌗', iconFont: 'display' },
+]
