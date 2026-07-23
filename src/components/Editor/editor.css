@@ -1,0 +1,156 @@
+/* ===================================================================
+   Editor surface (TipTap / ProseMirror)
+   Typography mirrors the "Editor tools" design doc: display serif body at
+   19px/1.62 on warm paper, with a 26px rhythm between blocks.
+   =================================================================== */
+
+.tiptap {
+  outline: none;
+  /* The native caret can't be widened, so it's hidden in favour of <Caret />. */
+  caret-color: transparent;
+}
+
+/* Rendered caret: wider than the native bar, breathing in place. */
+.editor-caret {
+  position: absolute;
+  width: 5px;
+  border-radius: 1px;
+  background: var(--marigold-700);
+  pointer-events: none;
+  transform-origin: center;
+  animation: caret-breathe 1.2s ease-in-out infinite;
+  /* Glide between positions instead of jumping. */
+  transition:
+    left 80ms ease-out,
+    top 80ms ease-out;
+}
+
+@keyframes caret-breathe {
+  0%,
+  100% {
+    transform: scaleY(1);
+    opacity: 1;
+  }
+  50% {
+    transform: scaleY(0);
+    opacity: 0.3;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .editor-caret {
+    animation: none;
+    transition: none;
+  }
+}
+
+.tiptap p {
+  font-family: var(--font-display);
+  font-size: 19px;
+  line-height: 1.62;
+  color: var(--text-body-color);
+  margin: 0 0 26px;
+}
+
+.tiptap h1,
+.tiptap h2,
+.tiptap h3 {
+  font-family: var(--font-display);
+  font-weight: var(--weight-display);
+  color: var(--text-strong);
+  margin: 34px 0 14px;
+}
+
+.tiptap h1 {
+  font-size: 34px;
+  line-height: 1.08;
+  letter-spacing: -0.022em;
+}
+
+.tiptap h2 {
+  font-size: 26px;
+  line-height: 1.12;
+  letter-spacing: -0.018em;
+}
+
+.tiptap h3 {
+  font-size: 21px;
+  line-height: 1.2;
+  letter-spacing: -0.012em;
+}
+
+.tiptap blockquote {
+  border-left: 2px solid var(--marigold-500);
+  padding-left: 20px;
+  margin: 0 0 26px;
+  font-style: italic;
+  color: var(--text-muted-color);
+}
+
+.tiptap blockquote p {
+  margin-bottom: 0;
+}
+
+.tiptap ul,
+.tiptap ol {
+  font-family: var(--font-display);
+  font-size: 19px;
+  line-height: 1.62;
+  color: var(--text-body-color);
+  margin: 0 0 26px;
+  padding-left: 26px;
+}
+
+.tiptap ul {
+  list-style: disc;
+}
+
+.tiptap ol {
+  list-style: decimal;
+}
+
+.tiptap li p {
+  margin-bottom: 0;
+}
+
+.tiptap a {
+  color: var(--marigold-700);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.tiptap code {
+  font-family: var(--font-mono);
+  font-size: 0.85em;
+  background: var(--sand-200);
+  border-radius: 4px;
+  padding: 2px 6px;
+}
+
+.tiptap pre {
+  font-family: var(--font-mono);
+  font-size: 13px;
+  line-height: 1.6;
+  background: var(--espresso-800);
+  color: var(--text-on-dark);
+  border-radius: var(--radius-input);
+  padding: 16px 18px;
+  margin: 0 0 26px;
+  overflow-x: auto;
+}
+
+.tiptap pre code {
+  background: none;
+  padding: 0;
+  font-size: inherit;
+}
+
+.tiptap hr {
+  border: none;
+  border-top: 1px solid var(--line);
+  margin: 34px 0;
+}
+
+.tiptap > *:last-child {
+  margin-bottom: 0;
+}

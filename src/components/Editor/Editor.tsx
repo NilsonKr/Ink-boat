@@ -7,8 +7,12 @@ import { saveDraftAction, updateDraftAction } from '@/actions/drafts'
 
 import { Button } from '@/components/ui/button'
 import AIPanel from '@/components/Editor/AIPanel'
+import Caret from '@/components/Editor/Caret'
+import { EnterNewParagraph } from '@/components/Editor/extensions/EnterNewParagraph'
 
 import { debounce } from '@/lib/utils'
+
+import '@/components/Editor/editor.css'
 
 import type { DraftMetadata } from '@/types/drafts'
 
@@ -55,11 +59,11 @@ export const Editor: React.FC<ComponentProps> = ({ content, publicId, title, des
   }, [])
 
   const editor = useEditor({
-    extensions: [StarterKit],
-    content: content ?? '<p>Hello World! 🌎️</p>',
+    extensions: [StarterKit, EnterNewParagraph],
+    content: content ?? '',
     editorProps: {
       attributes: {
-        // class: 'bg-(--paper-100) h-screen'
+        class: 'tiptap focus:outline-none',
       }
     },
     immediatelyRender: false,
@@ -131,8 +135,9 @@ export const Editor: React.FC<ComponentProps> = ({ content, publicId, title, des
       "
     />
 
-    <section className='mt-20'>
+    <section className='relative mt-20'>
       <EditorContent editor={editor} />
+      <Caret editor={editor} />
       {/* <Button
         onClick={() => draftSlug ?
           updateSaveActionDebounced(editor?.getJSON() as Content)
