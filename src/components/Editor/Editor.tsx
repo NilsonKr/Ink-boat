@@ -10,7 +10,6 @@ import AIPanel from '@/components/Editor/AIPanel'
 import Caret from '@/components/Editor/Caret'
 import SelectionToolbar from '@/components/Editor/SelectionToolbar'
 import { EnterNewParagraph } from '@/components/Editor/extensions/EnterNewParagraph'
-import { ClickBelowContent } from '@/components/Editor/extensions/ClickBelowContent'
 
 import { debounce, getSerializableContent, trimTrailingEmptyParagraphs } from '@/lib/utils'
 
@@ -66,7 +65,6 @@ export const Editor: React.FC<ComponentProps> = ({ content, publicId, title, des
       StarterKit.configure({ link: { openOnClick: false }, trailingNode: false }),
       Highlight.configure({ multicolor: true }),
       EnterNewParagraph,
-      ClickBelowContent,
     ],
     content: trimTrailingEmptyParagraphs(content),
     editorProps: {
