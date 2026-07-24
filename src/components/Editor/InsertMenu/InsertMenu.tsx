@@ -1,7 +1,12 @@
 'use client'
 import { useState } from 'react'
+import type { Editor } from '@tiptap/react'
 
 import { INSERT_BLOCKS } from '@/lib/constants'
+
+type ComponentProps = {
+  editor: Editor | null
+}
 
 const pillStyles = `
   flex items-center gap-[7px] rounded-(--radius-pill) border border-(--line) bg-(--paper-0)
@@ -9,13 +14,36 @@ const pillStyles = `
   cursor-pointer transition-colors hover:border-(--marigold-500) hover:text-(--marigold-700)
 `
 
-const InsertMenu: React.FC = () => {
+const InsertMenu: React.FC<ComponentProps> = ({ editor }) => {
   const [isExpanded, setIsExpanded] = useState<boolean>(false)
 
   // The rail sits outside the editor DOM, so mousedown would otherwise drop the caret.
   const handleKeepFocus = (event: React.MouseEvent) => event.preventDefault()
 
   const handleToggle = () => setIsExpanded(prev => !prev)
+
+  const handleInsert = (name: string) => {
+    if (!editor) return
+
+    // The rail is a fixed bar at the bottom of the surface, so blocks append to
+    // the end of the document rather than wherever the caret last sat.
+    const docEnd = editor.state.doc.content.size
+
+    switch (name) {
+      case 'Quote':
+        editor
+          .chain()
+          .insertContentAt(docEnd, { type: 'blockquote', content: [{ type: 'paragraph' }] })
+          .focus()
+          .run()
+        break
+      case 'Divider':
+        editor.chain().focus('end').setHorizontalRule().run()
+        break
+    }
+
+    setIsExpanded(false)
+  }
 
   return (
     <div className='mt-6 flex items-center gap-4' onMouseDown={handleKeepFocus}>
@@ -44,7 +72,13 @@ const InsertMenu: React.FC = () => {
         `}
       >
         {INSERT_BLOCKS.map(({ name, icon, iconFont }) => (
-          <button key={name} type='button' tabIndex={isExpanded ? 0 : -1} className={pillStyles}>
+          <button
+            key={name}
+            type='button'
+            tabIndex={isExpanded ? 0 : -1}
+            onClick={() => handleInsert(name)}
+            className={pillStyles}
+          >
             <span
               className={
                 iconFont === 'mono'

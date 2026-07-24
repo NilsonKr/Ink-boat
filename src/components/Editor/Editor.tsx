@@ -11,6 +11,7 @@ import Caret from '@/components/Editor/Caret'
 import InsertMenu from '@/components/Editor/InsertMenu'
 import SelectionToolbar from '@/components/Editor/SelectionToolbar'
 import { EnterNewParagraph } from '@/components/Editor/extensions/EnterNewParagraph'
+import { Divider } from '@/components/Editor/extensions/Divider'
 
 import { debounce, getSerializableContent, trimTrailingEmptyParagraphs } from '@/lib/utils'
 
@@ -63,8 +64,9 @@ export const Editor: React.FC<ComponentProps> = ({ content, publicId, title, des
 
   const editor = useEditor({
     extensions: [
-      StarterKit.configure({ link: { openOnClick: false }, trailingNode: false }),
+      StarterKit.configure({ link: { openOnClick: false }, trailingNode: false, horizontalRule: false }),
       Highlight.configure({ multicolor: true }),
+      Divider,
       EnterNewParagraph,
     ],
     content: trimTrailingEmptyParagraphs(content),
@@ -146,7 +148,7 @@ export const Editor: React.FC<ComponentProps> = ({ content, publicId, title, des
       <EditorContent editor={editor} />
       <Caret editor={editor} />
       <SelectionToolbar editor={editor} />
-      <InsertMenu />
+      <InsertMenu editor={editor} />
     </section>
 
     <AIPanel open={isAIPanelOpen} onClose={() => setIsAIPanelOpen(false)} />

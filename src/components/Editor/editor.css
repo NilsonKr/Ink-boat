@@ -91,15 +91,21 @@
   letter-spacing: -0.012em;
 }
 
+/* Pull-quote, per the "Inserted blocks" design group: a marigold rule and
+   large display italic in the reading measure. */
 .tiptap blockquote {
-  border-left: 2px solid var(--marigold-500);
-  padding-left: 20px;
+  border-left: 3px solid var(--marigold-500);
+  padding-left: 22px;
   margin: 0 0 26px;
-  font-style: italic;
-  color: var(--text-muted-color);
 }
 
 .tiptap blockquote p {
+  font-family: var(--font-display);
+  font-style: italic;
+  font-size: 22px;
+  line-height: 1.4;
+  letter-spacing: -0.01em;
+  color: var(--text-strong);
   margin-bottom: 0;
 }
 
@@ -164,10 +170,32 @@
   font-size: inherit;
 }
 
-.tiptap hr {
-  border: none;
-  border-top: 1px solid var(--line);
+/* Divider renders through a NodeView (.editor-divider) as the asterism section
+   break from the design. The glyph (U+2733) is absent from Newsreader, so the
+   stack falls through to a symbol-capable font. */
+.editor-divider {
   margin: 34px 0;
+  text-align: center;
+  border-radius: 4px;
+  user-select: none;
+}
+
+.editor-divider span {
+  font-family: 'Apple Symbols', 'Segoe UI Symbol', 'Noto Sans Symbols2', var(--font-display), sans-serif;
+  font-size: 20px;
+  letter-spacing: 0.5em;
+  color: var(--marigold-700);
+}
+
+/* The node's selected state is the marigold ring below, not a text underline —
+   ::selection ignores text-decoration-color, so it would render black. */
+.tiptap .editor-divider ::selection {
+  background: transparent;
+  text-decoration: none;
+}
+
+.editor-divider.is-selected {
+  box-shadow: 0 0 0 2px var(--marigold-500);
 }
 
 .tiptap > *:last-child {

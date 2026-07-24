@@ -1,7 +1,7 @@
 'use client'
 import { useEffect, useState } from 'react'
 import { BubbleMenu } from '@tiptap/react/menus'
-import { useEditorState } from '@tiptap/react'
+import { useEditorState, isNodeSelection } from '@tiptap/react'
 import type { Editor } from '@tiptap/react'
 
 import LinkInput from '@/components/Editor/SelectionToolbar/LinkInput'
@@ -81,6 +81,8 @@ const SelectionToolbar: React.FC<ComponentProps> = ({ editor }) => {
   return (
     <BubbleMenu
       editor={editor}
+      // Only over real text selections — never a selected block like the divider.
+      shouldShow={({ state }) => !state.selection.empty && !isNodeSelection(state.selection)}
       className='relative flex items-center gap-px rounded-(--radius-button) bg-(--espresso-800) p-[6px] shadow-(--shadow-pop)'
     >
       {isLinkMode ? (
