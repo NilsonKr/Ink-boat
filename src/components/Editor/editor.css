@@ -152,22 +152,122 @@
   padding: 2px 6px;
 }
 
-.tiptap pre {
-  font-family: var(--font-mono);
-  font-size: 13px;
-  line-height: 1.6;
-  background: var(--espresso-800);
-  color: var(--text-on-dark);
-  border-radius: var(--radius-input);
-  padding: 16px 18px;
+/* Code block renders through a NodeView (.editor-codeblock): a sand header rail
+   carrying the language dropdown + copy, over a lowlight-highlighted <pre>. */
+.editor-codeblock {
   margin: 0 0 26px;
+  border-radius: var(--radius-input);
+  overflow: hidden;
+  user-select: none;
+}
+
+.editor-codeblock__bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: var(--sand-300);
+  padding: 9px 14px;
+  font-family: var(--font-mono);
+}
+
+/* The visible label sits under a transparent full-bleed native <select>, so the
+   whole affordance opens the OS language list on click. */
+.editor-codeblock__lang {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 9.5px;
+  letter-spacing: 0.08em;
+  color: var(--plum-500);
+  cursor: pointer;
+}
+
+.editor-codeblock__lang select {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  cursor: pointer;
+  appearance: none;
+  border: none;
+  font: inherit;
+}
+
+.editor-codeblock__copy {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--text-label-color);
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+}
+
+.editor-codeblock pre {
+  margin: 0;
+  background: var(--sand-200);
+  padding: 16px 14px;
   overflow-x: auto;
 }
 
-.tiptap pre code {
+/* Override the inline-code chip styling for the block's own <code>. */
+.editor-codeblock pre code {
+  font-family: var(--font-mono);
+  font-size: 12.5px;
+  line-height: 1.65;
+  color: var(--text-body-color);
   background: none;
+  border-radius: 0;
   padding: 0;
-  font-size: inherit;
+  user-select: text;
+}
+
+/* lowlight (highlight.js) token theme, mapped to the design's warm palette.
+   Scoped under .editor-codeblock so it never reaches inline <code>. */
+.editor-codeblock .hljs-comment,
+.editor-codeblock .hljs-quote {
+  color: var(--text-label-color);
+  font-style: italic;
+}
+
+.editor-codeblock .hljs-keyword,
+.editor-codeblock .hljs-built_in,
+.editor-codeblock .hljs-selector-tag {
+  color: #c74d8c;
+}
+
+.editor-codeblock .hljs-title,
+.editor-codeblock .hljs-title.class_,
+.editor-codeblock .hljs-type,
+.editor-codeblock .hljs-tag {
+  color: #3a8bbf;
+}
+
+.editor-codeblock .hljs-title.function_ {
+  color: #2e9e6b;
+}
+
+.editor-codeblock .hljs-variable,
+.editor-codeblock .hljs-params,
+.editor-codeblock .hljs-attr,
+.editor-codeblock .hljs-attribute,
+.editor-codeblock .hljs-property {
+  color: #8256c4;
+}
+
+.editor-codeblock .hljs-string,
+.editor-codeblock .hljs-regexp {
+  color: var(--marigold-700);
+}
+
+.editor-codeblock .hljs-number,
+.editor-codeblock .hljs-literal,
+.editor-codeblock .hljs-symbol {
+  color: #2e9e6b;
 }
 
 /* Divider renders through a NodeView (.editor-divider) as the asterism section

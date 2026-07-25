@@ -40,6 +40,13 @@ const InsertMenu: React.FC<ComponentProps> = ({ editor }) => {
       case 'Divider':
         editor.chain().focus('end').setHorizontalRule().run()
         break
+      case 'Code':
+        editor
+          .chain()
+          .insertContentAt(docEnd, { type: 'codeBlock', attrs: { language: 'javascript' } })
+          .focus(docEnd + 1)
+          .run()
+        break
     }
 
     setIsExpanded(false)

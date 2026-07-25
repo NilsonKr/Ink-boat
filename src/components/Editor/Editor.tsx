@@ -12,6 +12,7 @@ import InsertMenu from '@/components/Editor/InsertMenu'
 import SelectionToolbar from '@/components/Editor/SelectionToolbar'
 import { EnterNewParagraph } from '@/components/Editor/extensions/EnterNewParagraph'
 import { Divider } from '@/components/Editor/extensions/Divider'
+import { CodeBlock } from '@/components/Editor/extensions/CodeBlock'
 
 import { debounce, getSerializableContent, trimTrailingEmptyParagraphs } from '@/lib/utils'
 
@@ -64,9 +65,10 @@ export const Editor: React.FC<ComponentProps> = ({ content, publicId, title, des
 
   const editor = useEditor({
     extensions: [
-      StarterKit.configure({ link: { openOnClick: false }, trailingNode: false, horizontalRule: false }),
+      StarterKit.configure({ link: { openOnClick: false }, trailingNode: false, horizontalRule: false, codeBlock: false }),
       Highlight.configure({ multicolor: true }),
       Divider,
+      CodeBlock,
       EnterNewParagraph,
     ],
     content: trimTrailingEmptyParagraphs(content),
