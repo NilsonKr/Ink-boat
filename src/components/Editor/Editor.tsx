@@ -1,14 +1,22 @@
 'use client'
 import { startTransition, useActionState, useEffect, useMemo, useState } from 'react'
-import { useEditor, EditorContent, Content } from '@tiptap/react'
+import { useEditor, EditorContent, type Content } from '@tiptap/react'
 import StarterKit from '@tiptap/starter-kit'
+import Highlight from '@tiptap/extension-highlight'
 
 import { saveDraftAction, updateDraftAction } from '@/actions/drafts'
 
-import { Button } from '@/components/ui/button'
 import AIPanel from '@/components/Editor/AIPanel'
+import Caret from '@/components/Editor/Caret'
+import InsertMenu from '@/components/Editor/InsertMenu'
+import SelectionToolbar from '@/components/Editor/SelectionToolbar'
+import { EnterNewParagraph } from '@/components/Editor/extensions/EnterNewParagraph'
+import { Divider } from '@/components/Editor/extensions/Divider'
+import { CodeBlock } from '@/components/Editor/extensions/CodeBlock'
 
-import { debounce } from '@/lib/utils'
+import { debounce, getSerializableContent, trimTrailingEmptyParagraphs } from '@/lib/utils'
+
+import '@/components/Editor/editor.css'
 
 import type { DraftMetadata } from '@/types/drafts'
 
@@ -23,6 +31,7 @@ type DraftActionPayload = {
   json: Content
   metadata?: DraftMetadata
 }
+
 
 export const Editor: React.FC<ComponentProps> = ({ content, publicId, title, description }) => {
   const [draft, saveDraft] = useActionState(
@@ -55,17 +64,23 @@ export const Editor: React.FC<ComponentProps> = ({ content, publicId, title, des
   }, [])
 
   const editor = useEditor({
-    extensions: [StarterKit],
-    content: content ?? '<p>Hello World! 🌎️</p>',
+    extensions: [
+      StarterKit.configure({ link: { openOnClick: false }, trailingNode: false, horizontalRule: false, codeBlock: false }),
+      Highlight.configure({ multicolor: true }),
+      Divider,
+      CodeBlock,
+      EnterNewParagraph,
+    ],
+    content: trimTrailingEmptyParagraphs(content),
     editorProps: {
       attributes: {
-        // class: 'bg-(--paper-100) h-screen'
+        class: 'tiptap focus:outline-none',
       }
     },
     immediatelyRender: false,
     onUpdate({ editor }) {
       setIsSaved(false)
-      updateSaveActionDebounced(editor?.getJSON() as Content)
+      updateSaveActionDebounced(getSerializableContent(editor))
     },
   })
 
@@ -131,16 +146,11 @@ export const Editor: React.FC<ComponentProps> = ({ content, publicId, title, des
       "
     />
 
-    <section className='mt-20'>
+    <section className='relative mt-20'>
       <EditorContent editor={editor} />
-      {/* <Button
-        onClick={() => draftSlug ?
-          updateSaveActionDebounced(editor?.getJSON() as Content)
-          :
-          saveDraftTransition(editor?.getJSON() as Content)}
-      >
-        Save
-      </Button> */}
+      <Caret editor={editor} />
+      <SelectionToolbar editor={editor} />
+      <InsertMenu editor={editor} />
     </section>
 
     <AIPanel open={isAIPanelOpen} onClose={() => setIsAIPanelOpen(false)} />

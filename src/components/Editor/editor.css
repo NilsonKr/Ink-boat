@@ -1,0 +1,303 @@
+/* ===================================================================
+   Editor surface (TipTap / ProseMirror)
+   Typography mirrors the "Editor tools" design doc: display serif body at
+   19px/1.62 on warm paper, with a 26px rhythm between blocks.
+   =================================================================== */
+
+.tiptap {
+  outline: none;
+  /* The native caret can't be widened, so it's hidden in favour of <Caret />. */
+  caret-color: transparent;
+}
+
+/* Selection: marigold wash with a solid rule underneath, per the design doc.
+   ::selection can't take box-shadow, so the rule is a text-decoration. */
+.tiptap ::selection,
+.tiptap::selection {
+  background: var(--marigold-100);
+  color: var(--text-strong);
+  text-decoration: underline;
+  text-decoration-color: var(--marigold-500);
+  text-decoration-thickness: 2px;
+  text-underline-offset: 3px;
+}
+
+/* Rendered caret: wider than the native bar, breathing in place. */
+.editor-caret {
+  position: absolute;
+  width: 5px;
+  border-radius: 1px;
+  background: var(--marigold-700);
+  pointer-events: none;
+  transform-origin: center;
+  animation: caret-breathe 1.2s ease-in-out infinite;
+  /* Glide between positions instead of jumping. */
+  transition:
+    left 80ms ease-out,
+    top 80ms ease-out;
+}
+
+@keyframes caret-breathe {
+  0%,
+  100% {
+    transform: scaleY(1);
+    opacity: 1;
+  }
+  50% {
+    transform: scaleY(0);
+    opacity: 0.3;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .editor-caret {
+    animation: none;
+    transition: none;
+  }
+}
+
+.tiptap p {
+  font-family: var(--font-display);
+  font-size: 19px;
+  line-height: 1.62;
+  color: var(--text-body-color);
+  margin: 0 0 26px;
+}
+
+.tiptap h1,
+.tiptap h2,
+.tiptap h3 {
+  font-family: var(--font-display);
+  font-weight: var(--weight-display);
+  color: var(--text-strong);
+  margin: 34px 0 14px;
+}
+
+.tiptap h1 {
+  font-size: 34px;
+  line-height: 1.08;
+  letter-spacing: -0.022em;
+}
+
+.tiptap h2 {
+  font-size: 26px;
+  line-height: 1.12;
+  letter-spacing: -0.018em;
+}
+
+.tiptap h3 {
+  font-size: 21px;
+  line-height: 1.2;
+  letter-spacing: -0.012em;
+}
+
+/* Pull-quote, per the "Inserted blocks" design group: a marigold rule and
+   large display italic in the reading measure. */
+.tiptap blockquote {
+  border-left: 3px solid var(--marigold-500);
+  padding-left: 22px;
+  margin: 0 0 26px;
+}
+
+.tiptap blockquote p {
+  font-family: var(--font-display);
+  font-style: italic;
+  font-size: 22px;
+  line-height: 1.4;
+  letter-spacing: -0.01em;
+  color: var(--text-strong);
+  margin-bottom: 0;
+}
+
+.tiptap ul,
+.tiptap ol {
+  font-family: var(--font-display);
+  font-size: 19px;
+  line-height: 1.62;
+  color: var(--text-body-color);
+  margin: 0 0 26px;
+  padding-left: 26px;
+}
+
+.tiptap ul {
+  list-style: disc;
+}
+
+.tiptap ol {
+  list-style: decimal;
+}
+
+.tiptap li p {
+  margin-bottom: 0;
+}
+
+.tiptap a {
+  color: var(--marigold-700);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.tiptap mark {
+  background-color: var(--marigold-300);
+  color: inherit;
+  padding: 0 2px;
+  border-radius: 2px;
+}
+
+.tiptap code {
+  font-family: var(--font-mono);
+  font-size: 0.85em;
+  background: var(--sand-200);
+  border-radius: 4px;
+  padding: 2px 6px;
+}
+
+/* Code block renders through a NodeView (.editor-codeblock): a sand header rail
+   carrying the language dropdown + copy, over a lowlight-highlighted <pre>. */
+.editor-codeblock {
+  margin: 0 0 26px;
+  border-radius: var(--radius-input);
+  overflow: hidden;
+  user-select: none;
+}
+
+.editor-codeblock__bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: var(--sand-300);
+  padding: 9px 14px;
+  font-family: var(--font-mono);
+}
+
+/* The visible label sits under a transparent full-bleed native <select>, so the
+   whole affordance opens the OS language list on click. */
+.editor-codeblock__lang {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 9.5px;
+  letter-spacing: 0.08em;
+  color: var(--plum-500);
+  cursor: pointer;
+}
+
+.editor-codeblock__lang select {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  cursor: pointer;
+  appearance: none;
+  border: none;
+  font: inherit;
+}
+
+.editor-codeblock__copy {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--text-label-color);
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+}
+
+.editor-codeblock pre {
+  margin: 0;
+  background: var(--sand-200);
+  padding: 16px 14px;
+  overflow-x: auto;
+}
+
+/* Override the inline-code chip styling for the block's own <code>. */
+.editor-codeblock pre code {
+  font-family: var(--font-mono);
+  font-size: 12.5px;
+  line-height: 1.65;
+  color: var(--text-body-color);
+  background: none;
+  border-radius: 0;
+  padding: 0;
+  user-select: text;
+}
+
+/* lowlight (highlight.js) token theme, mapped to the design's warm palette.
+   Scoped under .editor-codeblock so it never reaches inline <code>. */
+.editor-codeblock .hljs-comment,
+.editor-codeblock .hljs-quote {
+  color: var(--text-label-color);
+  font-style: italic;
+}
+
+.editor-codeblock .hljs-keyword,
+.editor-codeblock .hljs-built_in,
+.editor-codeblock .hljs-selector-tag {
+  color: #c74d8c;
+}
+
+.editor-codeblock .hljs-title,
+.editor-codeblock .hljs-title.class_,
+.editor-codeblock .hljs-type,
+.editor-codeblock .hljs-tag {
+  color: #3a8bbf;
+}
+
+.editor-codeblock .hljs-title.function_ {
+  color: #2e9e6b;
+}
+
+.editor-codeblock .hljs-variable,
+.editor-codeblock .hljs-params,
+.editor-codeblock .hljs-attr,
+.editor-codeblock .hljs-attribute,
+.editor-codeblock .hljs-property {
+  color: #8256c4;
+}
+
+.editor-codeblock .hljs-string,
+.editor-codeblock .hljs-regexp {
+  color: var(--marigold-700);
+}
+
+.editor-codeblock .hljs-number,
+.editor-codeblock .hljs-literal,
+.editor-codeblock .hljs-symbol {
+  color: #2e9e6b;
+}
+
+/* Divider renders through a NodeView (.editor-divider) as the asterism section
+   break from the design. The glyph (U+2733) is absent from Newsreader, so the
+   stack falls through to a symbol-capable font. */
+.editor-divider {
+  margin: 34px 0;
+  text-align: center;
+  border-radius: 4px;
+  user-select: none;
+}
+
+.editor-divider span {
+  font-family: 'Apple Symbols', 'Segoe UI Symbol', 'Noto Sans Symbols2', var(--font-display), sans-serif;
+  font-size: 20px;
+  letter-spacing: 0.5em;
+  color: var(--marigold-700);
+}
+
+/* The node's selected state is the marigold ring below, not a text underline —
+   ::selection ignores text-decoration-color, so it would render black. */
+.tiptap .editor-divider ::selection {
+  background: transparent;
+  text-decoration: none;
+}
+
+.editor-divider.is-selected {
+  box-shadow: 0 0 0 2px var(--marigold-500);
+}
+
+.tiptap > *:last-child {
+  margin-bottom: 0;
+}
