@@ -108,6 +108,7 @@ model Draft {
   description String      @default("")
   slug        String? // slugify(title); cosmetic only, NOT unique (URL = slug + "-" + publicId)
   content     Json? // Tiptap / ProseMirror document (output of editor.getJSON())
+  wordCount   Int         @default(0) @map("word_count") // reading time is derived from this, never stored
   status      DraftStatus @default(DRAFT)
   config      Json        @default("{}") // free-form, never-queried settings: theme, editor prefs, layout
   publishedAt DateTime?   @map("published_at")

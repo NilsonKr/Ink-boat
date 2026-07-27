@@ -8,8 +8,7 @@ export type Draft = {
   description: string
   status: DraftStatus
   updatedAt: Date
-  words?: number
-  readTime?: string
+  wordCount: number
 }
 
 export type StatusMeta = {

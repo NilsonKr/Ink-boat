@@ -33,21 +33,22 @@ type ComponentProps = {
 type DraftActionPayload = {
   json: Content
   metadata?: DraftMetadata
+  wordCount?: number
 }
 
 
 export const Editor: React.FC<ComponentProps> = ({ content, publicId, title, description, status }) => {
   const [draft, saveDraft] = useActionState(
     async (_: any, payload: DraftActionPayload) => {
-      const res = await saveDraftAction(payload.json, payload.metadata)
+      const res = await saveDraftAction(payload.json, payload.metadata, payload.wordCount)
 
       setIsSaved(true)
       window.history.replaceState(null, '', `/drafts/${res.publicId}`)
       return res
     }, null)
 
-  const saveDraftTransition = (json: Content, metadata?: DraftMetadata) => {
-    startTransition(() => saveDraft({ json, ...(metadata ? { metadata } : {}) }))
+  const saveDraftTransition = (json: Content, metadata?: DraftMetadata, wordCount?: number) => {
+    startTransition(() => saveDraft({ json, ...(metadata ? { metadata } : {}), wordCount }))
   }
 
   const [draftMetada, setDraftMetadata] = useState<DraftMetadata>({ title: title ?? '', description: description ?? '' })
@@ -87,27 +88,29 @@ export const Editor: React.FC<ComponentProps> = ({ content, publicId, title, des
       setWords(editor.storage.characterCount.words())
     },
     onUpdate({ editor }) {
+      const nextWords = editor.storage.characterCount.words()
+
       setIsSaved(false)
-      setWords(editor.storage.characterCount.words())
-      updateSaveActionDebounced(getSerializableContent(editor))
+      setWords(nextWords)
+      updateSaveActionDebounced(getSerializableContent(editor), undefined, nextWords)
     },
   })
 
-  const updateAction = async (slug: string, json: Content, metadata?: DraftMetadata) => {
-    const res = await updateDraftAction(slug, json, metadata)
+  const updateAction = async (slug: string, json: Content, metadata?: DraftMetadata, wordCount?: number) => {
+    const res = await updateDraftAction(slug, json, metadata, wordCount)
 
     setIsSaved(true)
     return res
   }
 
   const updateSaveActionDebounced = useMemo(() =>
-    debounce((json: Content, metadata?: DraftMetadata) => {
+    debounce((json: Content, metadata?: DraftMetadata, wordCount?: number) => {
       const draftSlug = publicId ?? draft?.publicId
 
       return draftSlug ?
-        updateAction(publicId ?? draft?.publicId!, json, metadata)
+        updateAction(publicId ?? draft?.publicId!, json, metadata, wordCount)
         :
-        saveDraftTransition(json, metadata)
+        saveDraftTransition(json, metadata, wordCount)
 
     }, 1000),
     [publicId, draft])

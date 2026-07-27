@@ -23,6 +23,7 @@ export const getDraftListAction = async (): Promise<Draft[]> => {
       description: true,
       status: true,
       updatedAt: true,
+      wordCount: true,
     },
     orderBy: { updatedAt: 'desc' },
   })
@@ -49,7 +50,7 @@ export const getDraftAction = async (slug: string) => {
 }
 
 
-export const saveDraftAction = async (json: Content, metadata?: DraftMetadata) => {
+export const saveDraftAction = async (json: Content, metadata?: DraftMetadata, wordCount?: number) => {
   const session = await auth.api.getSession({ headers: await headers() })
 
   if (!session) return redirect('/login')
@@ -58,6 +59,7 @@ export const saveDraftAction = async (json: Content, metadata?: DraftMetadata) =
     data: {
       ...(json ? { content: json as Prisma.InputJsonValue } : {}),
       ...(metadata ? metadata : {}),
+      ...(wordCount !== undefined ? { wordCount } : {}),
       userId: session.user.id,
     },
     select: { publicId: true },
@@ -66,7 +68,7 @@ export const saveDraftAction = async (json: Content, metadata?: DraftMetadata) =
   return draft
 }
 
-export const updateDraftAction = async (slug: string, json: Content, metadata?: DraftMetadata) => {
+export const updateDraftAction = async (slug: string, json: Content, metadata?: DraftMetadata, wordCount?: number) => {
   const session = await auth.api.getSession({ headers: await headers() })
 
   if (!session) return redirect('/login')
@@ -75,7 +77,8 @@ export const updateDraftAction = async (slug: string, json: Content, metadata?: 
     where: { publicId: slug, userId: session.user.id },
     data: {
       ...(json ? { content: json as Prisma.InputJsonValue } : {}),
-      ...(metadata ? metadata : {})
+      ...(metadata ? metadata : {}),
+      ...(wordCount !== undefined ? { wordCount } : {}),
     },
     select: { publicId: true },
   })
