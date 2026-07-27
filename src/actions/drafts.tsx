@@ -8,14 +8,14 @@ import type { Prisma } from '@/lib/db/generated/client'
 import { auth } from '@/lib/auth'
 import { prisma } from '@/lib/prisma'
 
-import type { Draft, DraftStatus, DraftMetadata } from '@/types/drafts'
+import type { Draft, DraftMetadata } from '@/types/drafts'
 
 export const getDraftListAction = async (): Promise<Draft[]> => {
   const session = await auth.api.getSession({ headers: await headers() })
 
   if (!session) return redirect('/login')
 
-  const drafts = await prisma.draft.findMany({
+  return prisma.draft.findMany({
     where: { userId: session.user.id },
     select: {
       publicId: true,
@@ -26,11 +26,6 @@ export const getDraftListAction = async (): Promise<Draft[]> => {
     },
     orderBy: { updatedAt: 'desc' },
   })
-
-  return drafts.map((draft) => ({
-    ...draft,
-    status: draft.status.toLowerCase() as DraftStatus,
-  }))
 }
 
 export const getDraftAction = async (slug: string) => {

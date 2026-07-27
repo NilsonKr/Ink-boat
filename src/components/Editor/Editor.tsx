@@ -3,12 +3,14 @@ import { startTransition, useActionState, useEffect, useMemo, useState } from 'r
 import { useEditor, EditorContent, type Content } from '@tiptap/react'
 import StarterKit from '@tiptap/starter-kit'
 import Highlight from '@tiptap/extension-highlight'
+import { CharacterCount } from '@tiptap/extensions'
 
 import { saveDraftAction, updateDraftAction } from '@/actions/drafts'
 
 import AIPanel from '@/components/Editor/AIPanel'
 import Caret from '@/components/Editor/Caret'
 import InsertMenu from '@/components/Editor/InsertMenu'
+import Navbar from '@/components/Editor/Navbar'
 import SelectionToolbar from '@/components/Editor/SelectionToolbar'
 import { EnterNewParagraph } from '@/components/Editor/extensions/EnterNewParagraph'
 import { Divider } from '@/components/Editor/extensions/Divider'
@@ -18,13 +20,14 @@ import { debounce, getSerializableContent, trimTrailingEmptyParagraphs } from '@
 
 import '@/components/Editor/editor.css'
 
-import type { DraftMetadata } from '@/types/drafts'
+import type { DraftMetadata, DraftStatus } from '@/types/drafts'
 
 type ComponentProps = {
   content?: Content | null
   publicId?: string | null
   title?: string
   description?: string
+  status?: DraftStatus
 }
 
 type DraftActionPayload = {
@@ -33,7 +36,7 @@ type DraftActionPayload = {
 }
 
 
-export const Editor: React.FC<ComponentProps> = ({ content, publicId, title, description }) => {
+export const Editor: React.FC<ComponentProps> = ({ content, publicId, title, description, status }) => {
   const [draft, saveDraft] = useActionState(
     async (_: any, payload: DraftActionPayload) => {
       const res = await saveDraftAction(payload.json, payload.metadata)
@@ -50,6 +53,7 @@ export const Editor: React.FC<ComponentProps> = ({ content, publicId, title, des
   const [draftMetada, setDraftMetadata] = useState<DraftMetadata>({ title: title ?? '', description: description ?? '' })
   const [isSaved, setIsSaved] = useState<boolean>(true)
   const [isAIPanelOpen, setIsAIPanelOpen] = useState<boolean>(false)
+  const [words, setWords] = useState<number>(0)
 
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
@@ -70,6 +74,7 @@ export const Editor: React.FC<ComponentProps> = ({ content, publicId, title, des
       Divider,
       CodeBlock,
       EnterNewParagraph,
+      CharacterCount,
     ],
     content: trimTrailingEmptyParagraphs(content),
     editorProps: {
@@ -78,8 +83,12 @@ export const Editor: React.FC<ComponentProps> = ({ content, publicId, title, des
       }
     },
     immediatelyRender: false,
+    onCreate({ editor }) {
+      setWords(editor.storage.characterCount.words())
+    },
     onUpdate({ editor }) {
       setIsSaved(false)
+      setWords(editor.storage.characterCount.words())
       updateSaveActionDebounced(getSerializableContent(editor))
     },
   })
@@ -115,42 +124,52 @@ export const Editor: React.FC<ComponentProps> = ({ content, publicId, title, des
   }
 
   return <>
-    <p className='min-h-[28px] font-display text-(--text-muted-color) text-xl text-end' >
-      {isSaved && 'Saved'}
-    </p>
-    <textarea
-      rows={1}
-      placeholder="Title"
-      name="title"
-      value={draftMetada.title}
-      onChange={({ target }) => handleSaveMetadata('title', target.value)}
-      className="
-        w-full text-6xl font-medium font-display resize-none border-none bg-transparent outline-none
-        field-sizing-content overflow-hidden
-        leading-tight
-        placeholder:text-stone-300
-      "
-    />
-    <textarea
-      rows={1}
-      name='description'
-      placeholder="Description"
-      value={draftMetada.description}
-      onChange={({ target }) => handleSaveMetadata('description', target.value)}
-      className="
-       w-full text-2xl font-display text-(--text-muted-color) mt-1
-       resize-none border-none bg-transparent outline-none
-        field-sizing-content overflow-hidden
-        leading-tight
-        placeholder:text-stone-300
-      "
+    <Navbar
+      issue={draftMetada.title}
+      words={words}
+      isSaved={isSaved}
+      status={status}
     />
 
-    <section className='relative mt-20'>
-      <EditorContent editor={editor} />
-      <Caret editor={editor} />
-      <SelectionToolbar editor={editor} />
-      <InsertMenu editor={editor} />
+    <section className='px-70'>
+      <section className='bg-(--paper-100) min-h-screen p-12'>
+        <textarea
+          rows={1}
+          placeholder="Title"
+          name="title"
+          value={draftMetada.title}
+          onChange={({ target }) => handleSaveMetadata('title', target.value)}
+          className="
+            w-full text-6xl font-medium font-display resize-none border-none bg-transparent outline-none
+            field-sizing-content overflow-hidden
+            leading-tight
+            placeholder:text-stone-300
+          "
+        />
+        <textarea
+          rows={1}
+          name='description'
+          placeholder="Description"
+          value={draftMetada.description}
+          onChange={({ target }) => handleSaveMetadata('description', target.value)}
+          className="
+           w-full text-2xl font-display text-(--text-muted-color) mt-1
+           resize-none border-none bg-transparent outline-none
+            field-sizing-content overflow-hidden
+            leading-tight
+            placeholder:text-stone-300
+          "
+        />
+
+        <div className='h-[2px] bg-(--espresso-800) mt-[22px]' />
+
+        <section className='relative mt-20'>
+          <EditorContent editor={editor} />
+          <Caret editor={editor} />
+          <SelectionToolbar editor={editor} />
+          <InsertMenu editor={editor} />
+        </section>
+      </section>
     </section>
 
     <AIPanel open={isAIPanelOpen} onClose={() => setIsAIPanelOpen(false)} />

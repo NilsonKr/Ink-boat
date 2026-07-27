@@ -1,5 +1,5 @@
 import type { LoginCopy, RegisterCopy } from '@/types/auth'
-import type { DraftsCopy } from '@/types/drafts'
+import type { DraftsCopy, EditorCopy } from '@/types/drafts'
 
 export const LOGIN_COPY: LoginCopy = {
   brand: {
@@ -62,9 +62,20 @@ export const DRAFTS_COPY: DraftsCopy = {
   subtitle: "Everything you're writing, in one place.",
   newDraft: 'New draft',
   filters: {
-    all: 'All',
-    draft: 'Drafts',
-    published: 'Published',
-    archived: 'Archived',
+    ALL: 'All',
+    DRAFT: 'Drafts',
+    PUBLISHED: 'Published',
+    ARCHIVED: 'Archived',
+  },
+}
+
+export const EDITOR_COPY: EditorCopy = {
+  navbar: {
+    markLabel: 'Ink boat',
+    stories: 'Stories',
+    untitled: 'Untitled draft',
+    saved: 'Saved',
+    saving: 'Saving…',
+    publish: 'Publish →',
   },
 }
