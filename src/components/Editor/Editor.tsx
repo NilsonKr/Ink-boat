@@ -9,6 +9,7 @@ import { saveDraftAction, updateDraftAction } from '@/actions/drafts'
 
 import AIPanel from '@/components/Editor/AIPanel'
 import Caret from '@/components/Editor/Caret'
+import ContentsRail from '@/components/Editor/ContentsRail'
 import InsertMenu from '@/components/Editor/InsertMenu'
 import Navbar from '@/components/Editor/Navbar'
 import SelectionToolbar from '@/components/Editor/SelectionToolbar'
@@ -126,7 +127,7 @@ export const Editor: React.FC<ComponentProps> = ({ content, publicId, title, des
     })
   }
 
-  return <>
+  return <div className='flex h-screen flex-col'>
     <Navbar
       issue={draftMetada.title}
       words={words}
@@ -134,49 +135,53 @@ export const Editor: React.FC<ComponentProps> = ({ content, publicId, title, des
       status={status}
     />
 
-    <section className='px-70'>
-      <section className='bg-(--paper-100) min-h-screen p-12'>
-        <textarea
-          rows={1}
-          placeholder="Title"
-          name="title"
-          value={draftMetada.title}
-          onChange={({ target }) => handleSaveMetadata('title', target.value)}
-          className="
-            w-full text-6xl font-medium font-display resize-none border-none bg-transparent outline-none
-            field-sizing-content overflow-hidden
-            leading-tight
-            placeholder:text-stone-300
-          "
-        />
-        <textarea
-          rows={1}
-          name='description'
-          placeholder="Description"
-          value={draftMetada.description}
-          onChange={({ target }) => handleSaveMetadata('description', target.value)}
-          className="
-           w-full text-2xl font-display text-(--text-muted-color) mt-1
-           resize-none border-none bg-transparent outline-none
-            field-sizing-content overflow-hidden
-            leading-tight
-            placeholder:text-stone-300
-          "
-        />
+    <div className='grid min-h-0 flex-1 grid-cols-[250px_1fr]'>
+      <ContentsRail editor={editor} />
 
-        <div className='h-[2px] bg-(--espresso-800) mt-[22px]' />
+      <section className='overflow-y-auto bg-(--paper-100) px-16 pt-13 pb-14'>
+        <div className='mx-auto w-full max-w-[68ch]'>
+          <textarea
+            rows={1}
+            placeholder="Title"
+            name="title"
+            value={draftMetada.title}
+            onChange={({ target }) => handleSaveMetadata('title', target.value)}
+            className="
+              w-full text-6xl font-medium font-display resize-none border-none bg-transparent outline-none
+              field-sizing-content overflow-hidden
+              leading-tight
+              placeholder:text-stone-300
+            "
+          />
+          <textarea
+            rows={1}
+            name='description'
+            placeholder="Description"
+            value={draftMetada.description}
+            onChange={({ target }) => handleSaveMetadata('description', target.value)}
+            className="
+             w-full text-2xl font-display text-(--text-muted-color) mt-1
+             resize-none border-none bg-transparent outline-none
+              field-sizing-content overflow-hidden
+              leading-tight
+              placeholder:text-stone-300
+            "
+          />
 
-        <section className='relative mt-20'>
-          <EditorContent editor={editor} />
-          <Caret editor={editor} />
-          <SelectionToolbar editor={editor} />
-          <InsertMenu editor={editor} />
-        </section>
+          <div className='h-[2px] bg-(--espresso-800) mt-[22px]' />
+
+          <section className='relative mt-20'>
+            <EditorContent editor={editor} />
+            <Caret editor={editor} />
+            <SelectionToolbar editor={editor} />
+            <InsertMenu editor={editor} />
+          </section>
+        </div>
       </section>
-    </section>
+    </div>
 
     <AIPanel open={isAIPanelOpen} onClose={() => setIsAIPanelOpen(false)} />
-  </>
+  </div>
 }
 
 export default Editor

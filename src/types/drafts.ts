@@ -46,4 +46,10 @@ export type EditorCopy = {
     saving: string
     publish: string
   }
+  contents: {
+    heading: string
+    hint: string
+    untitled: string
+    empty: string
+  }
 }

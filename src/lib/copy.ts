@@ -78,4 +78,10 @@ export const EDITOR_COPY: EditorCopy = {
     saving: 'Saving…',
     publish: 'Publish →',
   },
+  contents: {
+    heading: 'Contents',
+    hint: 'Auto · from headings',
+    untitled: 'Untitled section',
+    empty: 'Headings you add appear here',
+  },
 }
