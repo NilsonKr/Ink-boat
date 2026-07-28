@@ -20,6 +20,7 @@ const Page: React.FC<ComponentProps> = async ({ params }) => {
       title={draft?.title}
       description={draft?.description}
       status={draft?.status}
+      notes={draft?.notes}
     />
   )
 }

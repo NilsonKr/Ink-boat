@@ -13,6 +13,7 @@ import ContentsRail from '@/components/Editor/ContentsRail'
 import InsertMenu from '@/components/Editor/InsertMenu'
 import Navbar from '@/components/Editor/Navbar'
 import SelectionToolbar from '@/components/Editor/SelectionToolbar'
+import SidePanel from '@/components/Editor/SidePanel'
 import { EnterNewParagraph } from '@/components/Editor/extensions/EnterNewParagraph'
 import { Divider } from '@/components/Editor/extensions/Divider'
 import { CodeBlock } from '@/components/Editor/extensions/CodeBlock'
@@ -22,6 +23,7 @@ import { debounce, getSerializableContent, trimTrailingEmptyParagraphs } from '@
 import '@/components/Editor/editor.css'
 
 import type { DraftMetadata, DraftStatus } from '@/types/drafts'
+import type { Note } from '@/types/notes'
 
 type ComponentProps = {
   content?: Content | null
@@ -29,6 +31,7 @@ type ComponentProps = {
   title?: string
   description?: string
   status?: DraftStatus
+  notes?: Note[]
 }
 
 type DraftActionPayload = {
@@ -38,7 +41,7 @@ type DraftActionPayload = {
 }
 
 
-export const Editor: React.FC<ComponentProps> = ({ content, publicId, title, description, status }) => {
+export const Editor: React.FC<ComponentProps> = ({ content, publicId, title, description, status, notes = [] }) => {
   const [draft, saveDraft] = useActionState(
     async (_: any, payload: DraftActionPayload) => {
       const res = await saveDraftAction(payload.json, payload.metadata, payload.wordCount)
@@ -135,7 +138,7 @@ export const Editor: React.FC<ComponentProps> = ({ content, publicId, title, des
       status={status}
     />
 
-    <div className='grid min-h-0 flex-1 grid-cols-[250px_1fr]'>
+    <div className='grid min-h-0 flex-1 grid-cols-[250px_1fr_360px]'>
       <ContentsRail editor={editor} />
 
       <section className='overflow-y-auto bg-(--paper-100) px-16 pt-13 pb-14'>
@@ -178,6 +181,8 @@ export const Editor: React.FC<ComponentProps> = ({ content, publicId, title, des
           </section>
         </div>
       </section>
+
+      <SidePanel draftSlug={publicId ?? draft?.publicId} notes={notes} />
     </div>
 
     <AIPanel open={isAIPanelOpen} onClose={() => setIsAIPanelOpen(false)} />

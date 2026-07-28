@@ -52,4 +52,14 @@ export type EditorCopy = {
     untitled: string
     empty: string
   }
+  panel: {
+    suggestionsStub: string
+    noteEyebrow: string
+    addNote: string
+    emptyNotes: string
+    notePlaceholder: string
+    saveHint: string
+    needsDraft: string
+    remove: string
+  }
 }

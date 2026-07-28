@@ -84,4 +84,14 @@ export const EDITOR_COPY: EditorCopy = {
     untitled: 'Untitled section',
     empty: 'Headings you add appear here',
   },
+  panel: {
+    suggestionsStub: 'The margin is quiet for now.',
+    noteEyebrow: 'Note · You',
+    addNote: '＋ Note',
+    emptyNotes: 'Nothing in the margin yet.',
+    notePlaceholder: 'A thought about this draft…',
+    saveHint: '⌘ ↵ to save · esc to cancel',
+    needsDraft: 'Write something first — notes attach to a saved draft',
+    remove: 'Remove',
+  },
 }
