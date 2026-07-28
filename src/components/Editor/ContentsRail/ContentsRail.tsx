@@ -21,36 +21,38 @@ const badgeStyles =
   'w-5 shrink-0 font-mono text-[8.5px] tracking-[0.08em] text-(--text-label-color)'
 const activeStyles = 'border-b-2 border-(--marigold-500) pb-[2px] text-(--text-strong)'
 
+const getHeadingIndex = (editor: Editor | null) => {
+  const headings: HeadingEntry[] = []
+
+  if (!editor) return { headings, activePos: null }
+
+  editor.state.doc.descendants((node, pos) => {
+    if (node.type.name !== 'heading' || node.attrs.level > 2) return
+
+    headings.push({
+      level: node.attrs.level,
+      pos,
+      // Last position inside the heading, so the caret lands after its text.
+      end: pos + node.nodeSize - 1,
+      text: node.textContent,
+    })
+  })
+
+  const { from } = editor.state.selection
+
+  return { headings, activePos: headings.findLast(entry => entry.pos <= from)?.pos ?? null }
+}
+
 const ContentsRail: React.FC<ComponentProps> = ({ editor }) => {
   const { contents } = EDITOR_COPY
 
-  const index = useEditorState({
-    editor,
-    selector: ({ editor: currentEditor }) => {
-      if (!currentEditor) return null
+  // Subscription only. useEditorState caches a snapshot taken before useEditor
+  // resolves, and refreshes it solely on a transaction — so reading the index
+  // from its selector leaves the rail empty until the first keystroke. The
+  // editor prop is already current on the render that creates it.
+  useEditorState({ editor, selector: ({ transactionNumber }) => transactionNumber })
 
-      const headings: HeadingEntry[] = []
-
-      currentEditor.state.doc.descendants((node, pos) => {
-        if (node.type.name !== 'heading' || node.attrs.level > 2) return
-
-        headings.push({
-          level: node.attrs.level,
-          pos,
-          // Last position inside the heading, so the caret lands after its text.
-          end: pos + node.nodeSize - 1,
-          text: node.textContent,
-        })
-      })
-
-      const { from } = currentEditor.state.selection
-
-      return {
-        headings,
-        activePos: headings.findLast(entry => entry.pos <= from)?.pos ?? null,
-      }
-    },
-  })
+  const { headings, activePos } = getHeadingIndex(editor)
 
   const handleJump = (end: number) => editor?.chain().focus(end).scrollIntoView().run()
 
@@ -65,10 +67,10 @@ const ContentsRail: React.FC<ComponentProps> = ({ editor }) => {
         </span>
       </div>
 
-      {index?.headings.length ? (
+      {headings.length ? (
         <nav className='flex flex-col'>
-          {index.headings.map(({ level, pos, end, text }) => {
-            const isActive = pos === index.activePos
+          {headings.map(({ level, pos, end, text }) => {
+            const isActive = pos === activePos
             const isH1 = level === 1
 
             return (
