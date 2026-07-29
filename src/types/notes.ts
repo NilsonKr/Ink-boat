@@ -3,4 +3,6 @@ export type Note = {
   body: string
 }
 
+export type OptimisticNote = Note & { isPending?: boolean }
+
 export type PanelTab = 'suggestions' | 'notes'

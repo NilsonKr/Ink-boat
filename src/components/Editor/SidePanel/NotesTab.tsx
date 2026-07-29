@@ -1,5 +1,5 @@
 'use client'
-import { useState } from 'react'
+import { startTransition, useOptimistic, useState } from 'react'
 
 import { createNoteAction, deleteNoteAction, updateNoteAction } from '@/actions/notes'
 
@@ -8,7 +8,7 @@ import NoteComposer from '@/components/Editor/SidePanel/NoteComposer'
 
 import { EDITOR_COPY } from '@/lib/copy'
 
-import type { Note } from '@/types/notes'
+import type { Note, OptimisticNote } from '@/types/notes'
 
 type ComponentProps = {
   draftSlug?: string | null
@@ -22,14 +22,25 @@ const NotesTab: React.FC<ComponentProps> = ({ draftSlug, notes: initialNotes }) 
   const [editingId, setEditingId] = useState<string | null>(null)
   const [isComposing, setIsComposing] = useState<boolean>(false)
 
-  const handleCreate = async (body: string) => {
+  const [optimisticNotes, addOptimisticNote] = useOptimistic<OptimisticNote[], string>(
+    notes,
+    (current, body) => [...current, { publicId: crypto.randomUUID(), body, isPending: true }],
+  )
+
+  const handleCreate = (body: string) => {
     setIsComposing(false)
 
     if (!draftSlug) return
 
-    const note = await createNoteAction(draftSlug, body)
+    // The optimistic note holds the slot until the action resolves, so the list
+    // never flashes back to empty between composer close and server response.
+    startTransition(async () => {
+      addOptimisticNote(body)
 
-    if (note) setNotes(prev => [...prev, note])
+      const note = await createNoteAction(draftSlug, body)
+
+      if (note) setNotes(prev => [...prev, note])
+    })
   }
 
   const handleUpdate = async (publicId: string, body: string) => {
@@ -48,10 +59,11 @@ const NotesTab: React.FC<ComponentProps> = ({ draftSlug, notes: initialNotes }) 
 
   return (
     <div className='flex-1 overflow-auto px-[26px] pt-[26px] pb-8'>
-      {notes.map(note => (
+      {optimisticNotes.map(note => (
         <NoteCard
           key={note.publicId}
           note={note}
+          isPending={!!note.isPending}
           isEditing={note.publicId === editingId}
           onEdit={() => setEditingId(note.publicId)}
           onSave={body => handleUpdate(note.publicId, body)}
@@ -60,7 +72,7 @@ const NotesTab: React.FC<ComponentProps> = ({ draftSlug, notes: initialNotes }) 
         />
       ))}
 
-      {!notes.length && !isComposing && (
+      {!optimisticNotes.length && !isComposing && (
         <p className='font-display text-[14px] italic text-(--text-label-color)'>
           {panel.emptyNotes}
         </p>
