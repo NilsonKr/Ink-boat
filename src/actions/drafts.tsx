@@ -29,6 +29,20 @@ export const getDraftListAction = async (): Promise<Draft[]> => {
   })
 }
 
+/** Content only — the hero preview needs one draft's prose, not the whole list's documents. */
+export const getDraftContentAction = async (publicId: string) => {
+  const session = await auth.api.getSession({ headers: await headers() })
+
+  if (!session) return redirect('/login')
+
+  const draft = await prisma.draft.findUnique({
+    where: { publicId, userId: session.user.id },
+    select: { content: true },
+  })
+
+  return draft?.content ?? null
+}
+
 export const getDraftAction = async (slug: string) => {
   const session = await auth.api.getSession({ headers: await headers() })
 

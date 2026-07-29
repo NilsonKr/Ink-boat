@@ -27,7 +27,8 @@ export type DraftsFilterTab = {
 export type DraftsHeroCopy = {
   publication: string
   navStories: string
-  navRead: string
+  navExplore: string
+  navExploreBadge: string
   editedPrefix: string
   cta: string
   emptyTitle: string

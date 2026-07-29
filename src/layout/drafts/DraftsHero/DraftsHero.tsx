@@ -8,13 +8,14 @@ import type { Draft, DraftsHeroCopy } from '@/types/drafts'
 
 type DraftsHeroProps = {
   draft?: Draft
+  preview?: string
   userInitial: string
   copy: DraftsHeroCopy
 }
 
-const DraftsHero: React.FC<DraftsHeroProps> = ({ draft, userInitial, copy }) => {
+const DraftsHero: React.FC<DraftsHeroProps> = ({ draft, preview, userInitial, copy }) => {
   const title = draft ? draft.title || 'Untitled' : copy.emptyTitle
-  const excerpt = draft ? draft.description : copy.emptyExcerpt
+  const description = draft ? draft.description : copy.emptyExcerpt
 
   return (
     <>
@@ -38,8 +39,13 @@ const DraftsHero: React.FC<DraftsHeroProps> = ({ draft, userInitial, copy }) => 
             <span className="font-mono text-[11px] uppercase tracking-[0.14em] text-[var(--text-on-dark)]">
               {copy.navStories}
             </span>
-            <span className="font-mono text-[11px] uppercase tracking-[0.14em] text-[var(--text-on-dark-muted)]">
-              {copy.navRead}
+            <span className="inline-flex items-center gap-[7px]">
+              <span className="font-mono text-[11px] uppercase tracking-[0.14em] text-[var(--text-on-dark-muted)]">
+                {copy.navExplore}
+              </span>
+              <span className="rounded-full border border-[rgba(226,168,74,0.45)] px-[6px] py-[2px] font-mono text-[8px] uppercase leading-none tracking-[0.1em] text-[var(--marigold-500)]">
+                {copy.navExploreBadge}
+              </span>
             </span>
             <span className="flex size-[34px] items-center justify-center rounded-full bg-[var(--plum-500)] font-display text-[15px] text-white">
               {userInitial}
@@ -58,10 +64,20 @@ const DraftsHero: React.FC<DraftsHeroProps> = ({ draft, userInitial, copy }) => 
             {title}
           </h1>
 
-          {excerpt && (
-            <p className="mb-[26px] max-w-[52ch] font-display text-[18px] italic leading-[1.5] text-[var(--text-on-dark-muted)]">
-              {excerpt}
-            </p>
+          {(description || preview) && (
+            <div className="mb-[26px] max-w-[52ch] space-y-[10px]">
+              {description && (
+                <p className="font-display text-[18px] italic leading-[1.5] text-[var(--text-on-dark-muted)]">
+                  {description}
+                </p>
+              )}
+
+              {draft && preview && (
+                <p className="font-display text-[15.5px] leading-[1.55] text-[var(--text-on-dark-muted)]">
+                  {preview}
+                </p>
+              )}
+            </div>
           )}
 
           <div className="flex items-center gap-5">

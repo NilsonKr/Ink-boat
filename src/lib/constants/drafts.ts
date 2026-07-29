@@ -1,5 +1,8 @@
 import type { StatusMeta, DraftStatus, DraftsCopy } from '@/types/drafts'
 
+/** Character budget for the hero preview — the excerpt sits in a 52ch column. */
+export const HERO_EXCERPT_LENGTH = 160
+
 export const STATUS_META: Record<DraftStatus, StatusMeta> = {
   DRAFT: {
     label: 'Draft',
@@ -32,7 +35,8 @@ export const DRAFTS_COPY: DraftsCopy = {
   hero: {
     publication: 'Your Publication',
     navStories: 'Stories',
-    navRead: 'Read',
+    navExplore: 'Explore',
+    navExploreBadge: 'Coming soon',
     editedPrefix: 'Freshest ink · Edited',
     cta: 'Keep writing →',
     emptyTitle: 'Nothing on the desk yet.',
