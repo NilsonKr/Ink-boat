@@ -2,7 +2,7 @@
 import { useEditorState } from '@tiptap/react'
 import type { Editor } from '@tiptap/react'
 
-import { EDITOR_COPY } from '@/lib/copy'
+import { EDITOR_COPY } from '@/lib/constants/editor'
 
 type ComponentProps = {
   editor: Editor | null

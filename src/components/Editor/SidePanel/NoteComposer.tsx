@@ -1,7 +1,7 @@
 'use client'
 import { useRef, useState } from 'react'
 
-import { EDITOR_COPY } from '@/lib/copy'
+import { EDITOR_COPY } from '@/lib/constants/editor'
 
 type ComponentProps = {
   initialBody?: string

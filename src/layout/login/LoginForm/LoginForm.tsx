@@ -10,7 +10,7 @@ import { Field, FieldGroup, FieldLabel, FieldError } from "@/components/ui/field
 
 import { cn } from "@/lib/utils"
 
-import { LOGIN_COPY } from "@/lib/copy"
+import { LOGIN_COPY } from "@/lib/constants/auth"
 
 import type { LoginFormProps } from "@/types/auth"
 

@@ -4,7 +4,7 @@ import { useState } from 'react'
 import NotesTab from '@/components/Editor/SidePanel/NotesTab'
 import SuggestionsTab from '@/components/Editor/SidePanel/SuggestionsTab'
 
-import { PANEL_TABS } from '@/lib/constants'
+import { PANEL_TABS } from '@/lib/constants/editor'
 
 import type { Note, PanelTab } from '@/types/notes'
 

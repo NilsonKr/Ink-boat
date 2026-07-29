@@ -1,5 +1,4 @@
 import type { LoginCopy, RegisterCopy } from '@/types/auth'
-import type { DraftsCopy, EditorCopy } from '@/types/drafts'
 
 export const LOGIN_COPY: LoginCopy = {
   brand: {
@@ -53,45 +52,5 @@ export const REGISTER_COPY: RegisterCopy = {
       privacyLink: 'Privacy Policy',
       suffix: '.',
     },
-  },
-}
-
-export const DRAFTS_COPY: DraftsCopy = {
-  eyebrow: 'Your desk',
-  heading: 'Drafts',
-  subtitle: "Everything you're writing, in one place.",
-  newDraft: 'New draft',
-  filters: {
-    ALL: 'All',
-    DRAFT: 'Drafts',
-    PUBLISHED: 'Published',
-    ARCHIVED: 'Archived',
-  },
-}
-
-export const EDITOR_COPY: EditorCopy = {
-  navbar: {
-    markLabel: 'Ink boat',
-    stories: 'Stories',
-    untitled: 'Untitled draft',
-    saved: 'Saved',
-    saving: 'Saving…',
-    publish: 'Publish →',
-  },
-  contents: {
-    heading: 'Contents',
-    hint: 'Auto · from headings',
-    untitled: 'Untitled section',
-    empty: 'Headings you add appear here',
-  },
-  panel: {
-    suggestionsStub: 'The margin is quiet for now.',
-    noteEyebrow: 'Note · You',
-    addNote: '＋ Note',
-    emptyNotes: 'Nothing in the margin yet.',
-    notePlaceholder: 'A thought about this draft…',
-    saveHint: '⌘ ↵ to save · esc to cancel',
-    needsDraft: 'Write something first — notes attach to a saved draft',
-    remove: 'Remove',
   },
 }

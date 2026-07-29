@@ -2,7 +2,7 @@
 import { useState } from 'react'
 import type { Editor } from '@tiptap/react'
 
-import { INSERT_BLOCKS } from '@/lib/constants'
+import { INSERT_BLOCKS } from '@/lib/constants/editor'
 
 type ComponentProps = {
   editor: Editor | null

@@ -1,5 +1,5 @@
 'use client'
-import { HIGHLIGHT_COLORS } from '@/lib/constants'
+import { HIGHLIGHT_COLORS } from '@/lib/constants/theme'
 
 type ComponentProps = {
   activeColor?: string

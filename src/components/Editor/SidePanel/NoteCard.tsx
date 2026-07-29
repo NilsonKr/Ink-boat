@@ -1,7 +1,7 @@
 'use client'
 import NoteComposer from '@/components/Editor/SidePanel/NoteComposer'
 
-import { EDITOR_COPY } from '@/lib/copy'
+import { EDITOR_COPY } from '@/lib/constants/editor'
 
 import type { Note } from '@/types/notes'
 

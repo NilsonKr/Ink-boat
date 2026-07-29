@@ -1,4 +1,4 @@
-import { EDITOR_COPY } from '@/lib/copy'
+import { EDITOR_COPY } from '@/lib/constants/editor'
 
 const SuggestionsTab: React.FC = () => {
   const { panel } = EDITOR_COPY

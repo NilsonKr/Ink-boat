@@ -2,7 +2,7 @@ import Link from 'next/link'
 
 import StatusBadge from '@/components/drafts/StatusBadge'
 
-import { EDITOR_COPY } from '@/lib/copy'
+import { EDITOR_COPY } from '@/lib/constants/editor'
 import { formatWords, readingTime } from '@/lib/drafts'
 
 import type { DraftStatus } from '@/types/drafts'
