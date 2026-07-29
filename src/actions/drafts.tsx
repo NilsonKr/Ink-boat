@@ -43,6 +43,7 @@ export const getDraftAction = async (slug: string) => {
       status: true,
       content: true,
       updatedAt: true,
+      wordCount: true,
       // Ascending: the panel's "+ Note" affordance sits under the stack, so new notes append there.
       notes: {
         select: { publicId: true, body: true },
