@@ -24,12 +24,24 @@ export type DraftsFilterTab = {
   label: string
 }
 
+export type DraftsHeroCopy = {
+  publication: string
+  navStories: string
+  navRead: string
+  editedPrefix: string
+  cta: string
+  emptyTitle: string
+  emptyExcerpt: string
+  emptyCta: string
+}
+
 export type DraftsCopy = {
   eyebrow: string
   heading: string
   subtitle: string
   newDraft: string
   filters: Record<DraftsFilter, string>
+  hero: DraftsHeroCopy
 }
 
 export type DraftMetadata = {

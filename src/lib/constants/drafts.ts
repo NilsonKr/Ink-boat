@@ -29,4 +29,14 @@ export const DRAFTS_COPY: DraftsCopy = {
     PUBLISHED: 'Published',
     ARCHIVED: 'Archived',
   },
+  hero: {
+    publication: 'Your Publication',
+    navStories: 'Stories',
+    navRead: 'Read',
+    editedPrefix: 'Freshest ink · Edited',
+    cta: 'Keep writing →',
+    emptyTitle: 'Nothing on the desk yet.',
+    emptyExcerpt: 'Your freshest draft surfaces here once you start writing.',
+    emptyCta: 'Start writing →',
+  },
 }
