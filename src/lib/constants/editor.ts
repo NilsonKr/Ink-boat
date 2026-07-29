@@ -1,6 +1,9 @@
 import type { EditorCopy } from '@/types/drafts'
 import type { PanelTab } from '@/types/notes'
 
+/** Idle time in ms before the autosave listener sends the draft. */
+export const AUTOSAVE_DELAY = 1000
+
 export const PANEL_TABS: { key: PanelTab; label: string; icon?: string }[] = [
   { key: 'suggestions', label: 'Suggestions', icon: '✦' },
   { key: 'notes', label: 'Notes' },

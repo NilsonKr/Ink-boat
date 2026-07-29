@@ -37,6 +37,8 @@ export type DraftMetadata = {
   description: string
 }
 
+export type SaveStatus = 'saved' | 'dirty' | 'saving' | 'error'
+
 export type EditorCopy = {
   navbar: {
     markLabel: string
