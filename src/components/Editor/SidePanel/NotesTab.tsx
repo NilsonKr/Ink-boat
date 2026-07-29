@@ -6,7 +6,7 @@ import { createNoteAction, deleteNoteAction, updateNoteAction } from '@/actions/
 import NoteCard from '@/components/Editor/SidePanel/NoteCard'
 import NoteComposer from '@/components/Editor/SidePanel/NoteComposer'
 
-import { EDITOR_COPY } from '@/lib/copy'
+import { EDITOR_COPY } from '@/lib/constants/editor'
 
 import type { Note, OptimisticNote } from '@/types/notes'
 

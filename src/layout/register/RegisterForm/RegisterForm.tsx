@@ -9,7 +9,7 @@ import { Input } from "@/components/ui/input"
 import { Field, FieldGroup, FieldLabel, FieldError } from "@/components/ui/field"
 
 import { cn } from "@/lib/utils"
-import { REGISTER_COPY } from "@/lib/copy"
+import { REGISTER_COPY } from "@/lib/constants/auth"
 
 type ComponentProps = {
   className: string

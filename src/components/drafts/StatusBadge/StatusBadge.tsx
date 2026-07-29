@@ -1,4 +1,4 @@
-import { STATUS_META } from "@/lib/drafts"
+import { STATUS_META } from "@/lib/constants/drafts"
 
 import type { DraftStatus } from "@/types/drafts"
 
