@@ -14,16 +14,14 @@ const Page: React.FC<ComponentProps> = async ({ params }) => {
   const draft = await getDraftAction(slug)
 
   return (
-    <section className='px-70'>
-      <section className='bg-(--paper-100) min-h-screen p-12'>
-        <Editor
-          publicId={slug}
-          content={draft?.content as Content}
-          title={draft?.title}
-          description={draft?.description}
-        />
-      </section>
-    </section>
+    <Editor
+      publicId={slug}
+      content={draft?.content as Content}
+      title={draft?.title}
+      description={draft?.description}
+      status={draft?.status}
+      notes={draft?.notes}
+    />
   )
 }
 

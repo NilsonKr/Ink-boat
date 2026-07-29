@@ -1,4 +1,6 @@
-export type DraftStatus = 'draft' | 'published' | 'archived'
+export type { DraftStatus } from '@/lib/db/generated/enums'
+
+import type { DraftStatus } from '@/lib/db/generated/enums'
 
 export type Draft = {
   publicId: string
@@ -6,8 +8,7 @@ export type Draft = {
   description: string
   status: DraftStatus
   updatedAt: Date
-  words?: number
-  readTime?: string
+  wordCount: number
 }
 
 export type StatusMeta = {
@@ -16,7 +17,7 @@ export type StatusMeta = {
   tint: string
 }
 
-export type DraftsFilter = 'all' | DraftStatus
+export type DraftsFilter = 'ALL' | DraftStatus
 
 export type DraftsFilterTab = {
   key: DraftsFilter
@@ -34,4 +35,31 @@ export type DraftsCopy = {
 export type DraftMetadata = {
   title: string
   description: string
+}
+
+export type EditorCopy = {
+  navbar: {
+    markLabel: string
+    stories: string
+    untitled: string
+    saved: string
+    saving: string
+    publish: string
+  }
+  contents: {
+    heading: string
+    hint: string
+    untitled: string
+    empty: string
+  }
+  panel: {
+    suggestionsStub: string
+    noteEyebrow: string
+    addNote: string
+    emptyNotes: string
+    notePlaceholder: string
+    saveHint: string
+    needsDraft: string
+    remove: string
+  }
 }

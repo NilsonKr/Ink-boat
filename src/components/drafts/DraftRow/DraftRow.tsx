@@ -3,7 +3,7 @@ import { useRouter } from "next/navigation"
 
 import StatusBadge from "@/components/drafts/StatusBadge"
 
-import { formatWords } from "@/lib/drafts"
+import { formatWords, readingTime } from "@/lib/drafts"
 
 import type { Draft } from "@/types/drafts"
 
@@ -38,7 +38,7 @@ const DraftRow: React.FC<DraftRowProps> = ({ draft, index }) => {
           {draft.description ? draft.description : 'Add a description for this blog'}
         </p>
         <p className="font-mono text-[10px] uppercase tracking-[0.12em] text-[var(--text-label-color)]">
-          {draft?.readTime ?? ''} · {formatWords(draft?.words ?? 0)} · Edited {draft.updatedAt.toLocaleDateString()}
+          {readingTime(draft.wordCount)} · {formatWords(draft.wordCount)} · Edited {draft.updatedAt.toLocaleDateString()}
         </p>
       </div>
 

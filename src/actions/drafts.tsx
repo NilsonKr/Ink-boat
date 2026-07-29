@@ -8,14 +8,14 @@ import type { Prisma } from '@/lib/db/generated/client'
 import { auth } from '@/lib/auth'
 import { prisma } from '@/lib/prisma'
 
-import type { Draft, DraftStatus, DraftMetadata } from '@/types/drafts'
+import type { Draft, DraftMetadata } from '@/types/drafts'
 
 export const getDraftListAction = async (): Promise<Draft[]> => {
   const session = await auth.api.getSession({ headers: await headers() })
 
   if (!session) return redirect('/login')
 
-  const drafts = await prisma.draft.findMany({
+  return prisma.draft.findMany({
     where: { userId: session.user.id },
     select: {
       publicId: true,
@@ -23,14 +23,10 @@ export const getDraftListAction = async (): Promise<Draft[]> => {
       description: true,
       status: true,
       updatedAt: true,
+      wordCount: true,
     },
     orderBy: { updatedAt: 'desc' },
   })
-
-  return drafts.map((draft) => ({
-    ...draft,
-    status: draft.status.toLowerCase() as DraftStatus,
-  }))
 }
 
 export const getDraftAction = async (slug: string) => {
@@ -47,6 +43,11 @@ export const getDraftAction = async (slug: string) => {
       status: true,
       content: true,
       updatedAt: true,
+      // Ascending: the panel's "+ Note" affordance sits under the stack, so new notes append there.
+      notes: {
+        select: { publicId: true, body: true },
+        orderBy: { createdAt: 'asc' },
+      },
     }
   })
 
@@ -54,7 +55,7 @@ export const getDraftAction = async (slug: string) => {
 }
 
 
-export const saveDraftAction = async (json: Content, metadata?: DraftMetadata) => {
+export const saveDraftAction = async (json: Content, metadata?: DraftMetadata, wordCount?: number) => {
   const session = await auth.api.getSession({ headers: await headers() })
 
   if (!session) return redirect('/login')
@@ -63,6 +64,7 @@ export const saveDraftAction = async (json: Content, metadata?: DraftMetadata) =
     data: {
       ...(json ? { content: json as Prisma.InputJsonValue } : {}),
       ...(metadata ? metadata : {}),
+      ...(wordCount !== undefined ? { wordCount } : {}),
       userId: session.user.id,
     },
     select: { publicId: true },
@@ -71,7 +73,7 @@ export const saveDraftAction = async (json: Content, metadata?: DraftMetadata) =
   return draft
 }
 
-export const updateDraftAction = async (slug: string, json: Content, metadata?: DraftMetadata) => {
+export const updateDraftAction = async (slug: string, json: Content, metadata?: DraftMetadata, wordCount?: number) => {
   const session = await auth.api.getSession({ headers: await headers() })
 
   if (!session) return redirect('/login')
@@ -80,7 +82,8 @@ export const updateDraftAction = async (slug: string, json: Content, metadata?: 
     where: { publicId: slug, userId: session.user.id },
     data: {
       ...(json ? { content: json as Prisma.InputJsonValue } : {}),
-      ...(metadata ? metadata : {})
+      ...(metadata ? metadata : {}),
+      ...(wordCount !== undefined ? { wordCount } : {}),
     },
     select: { publicId: true },
   })

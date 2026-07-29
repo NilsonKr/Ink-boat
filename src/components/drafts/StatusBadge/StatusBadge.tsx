@@ -1,9 +1,5 @@
-// React / third-party imports
-
-// utils, constants imports
 import { STATUS_META } from "@/lib/drafts"
 
-// types imports
 import type { DraftStatus } from "@/types/drafts"
 
 type StatusBadgeProps = {

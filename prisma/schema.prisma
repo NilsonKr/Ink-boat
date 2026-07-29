@@ -108,6 +108,7 @@ model Draft {
   description String      @default("")
   slug        String? // slugify(title); cosmetic only, NOT unique (URL = slug + "-" + publicId)
   content     Json? // Tiptap / ProseMirror document (output of editor.getJSON())
+  wordCount   Int         @default(0) @map("word_count") // reading time is derived from this, never stored
   status      DraftStatus @default(DRAFT)
   config      Json        @default("{}") // free-form, never-queried settings: theme, editor prefs, layout
   publishedAt DateTime?   @map("published_at")
@@ -118,12 +119,31 @@ model Draft {
   user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   media Media[]
+  notes Note[]
 
   // "my drafts", filterable by status
   // public feed of published posts, newest first
   @@index([userId, status])
   @@index([status, publishedAt])
   @@map("drafts")
+}
+
+// ---------------------------------------------------------------------------
+
+// Margin notes written alongside a draft in the editor's side panel.
+model Note {
+  id       BigInt @id @default(autoincrement())
+  publicId String @unique @default(nanoid(12)) @map("public_id") @db.VarChar(12) // named by the client on edit / delete
+
+  body      String
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  draftId BigInt @map("draft_id")
+  draft   Draft  @relation(fields: [draftId], references: [id], onDelete: Cascade)
+
+  @@index([draftId, createdAt])
+  @@map("notes")
 }
 
 // ---------------------------------------------------------------------------

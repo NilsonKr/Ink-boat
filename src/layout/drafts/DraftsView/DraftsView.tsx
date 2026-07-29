@@ -22,28 +22,28 @@ type DraftsViewProps = {
 }
 
 const DraftsView: React.FC<DraftsViewProps> = ({ drafts, copy }) => {
-  const [active, setActive] = useState<DraftsFilter>("all")
+  const [active, setActive] = useState<DraftsFilter>("ALL")
 
   const counts = useMemo<Record<DraftsFilter, number>>(
     () => ({
-      all: drafts.length,
-      draft: drafts.filter((draft) => draft.status === "draft").length,
-      published: drafts.filter((draft) => draft.status === "published").length,
-      archived: drafts.filter((draft) => draft.status === "archived").length,
+      ALL: drafts.length,
+      DRAFT: drafts.filter((draft) => draft.status === "DRAFT").length,
+      PUBLISHED: drafts.filter((draft) => draft.status === "PUBLISHED").length,
+      ARCHIVED: drafts.filter((draft) => draft.status === "ARCHIVED").length,
     }),
     [drafts]
   )
 
   const tabs: DraftsFilterTab[] = [
-    { key: "all", label: copy.filters.all },
-    { key: "draft", label: copy.filters.draft },
-    { key: "published", label: copy.filters.published },
-    { key: "archived", label: copy.filters.archived },
+    { key: "ALL", label: copy.filters.ALL },
+    { key: "DRAFT", label: copy.filters.DRAFT },
+    { key: "PUBLISHED", label: copy.filters.PUBLISHED },
+    { key: "ARCHIVED", label: copy.filters.ARCHIVED },
   ]
 
   const visibleDrafts = useMemo(
     () =>
-      active === "all"
+      active === "ALL"
         ? drafts
         : drafts.filter((draft) => draft.status === active),
     [drafts, active]
