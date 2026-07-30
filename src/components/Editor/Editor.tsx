@@ -34,6 +34,7 @@ import '@/components/Editor/editor.css'
 
 import type { DraftMetadata, DraftStatus } from '@/types/drafts'
 import type { Note } from '@/types/notes'
+import type { ProviderKeySummary } from '@/types/providers'
 
 type ComponentProps = {
   content?: Content | null
@@ -42,9 +43,15 @@ type ComponentProps = {
   description?: string
   status?: DraftStatus
   notes?: Note[]
+  providerKeys?: ProviderKeySummary[]
 }
 
-export const Editor: React.FC<ComponentProps> = ({ content, status, notes = [] }) => {
+export const Editor: React.FC<ComponentProps> = ({
+  content,
+  status,
+  notes = [],
+  providerKeys = [],
+}) => {
   const dispatch = useAppDispatch()
 
   const draftSlug = useAppSelector(selectDraftSlug)
@@ -157,7 +164,7 @@ export const Editor: React.FC<ComponentProps> = ({ content, status, notes = [] }
         </div>
       </section>
 
-      <SidePanel draftSlug={draftSlug} notes={notes} />
+      <SidePanel draftSlug={draftSlug} notes={notes} providerKeys={providerKeys} />
     </div>
 
     <AIPanel open={isAIPanelOpen} onClose={() => setIsAIPanelOpen(false)} />

@@ -4,14 +4,16 @@ export const AI_PROVIDERS: Record<AIProvider, ProviderMeta> = {
   GEMINI: {
     label: 'Google (Gemini)',
     keyPrefix: 'AIza',
-    placeholder: 'AIza…',
+    placeholder: 'AIza••••••••••••',
+    keyNameExample: 'Gemini — personal',
     consoleLabel: 'Google AI Studio',
     consoleUrl: 'https://aistudio.google.com/apikey',
   },
   ANTHROPIC: {
     label: 'Anthropic (Claude)',
     keyPrefix: 'sk-ant-',
-    placeholder: 'sk-ant-…',
+    placeholder: 'sk-ant-••••••••••••',
+    keyNameExample: 'Claude — personal',
     consoleLabel: 'the Anthropic Console',
     consoleUrl: 'https://console.anthropic.com/settings/keys',
   },

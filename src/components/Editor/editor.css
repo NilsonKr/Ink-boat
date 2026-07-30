@@ -281,7 +281,9 @@
 }
 
 .editor-divider span {
-  font-family: 'Apple Symbols', 'Segoe UI Symbol', 'Noto Sans Symbols2', var(--font-display), sans-serif;
+  font-family:
+    'Apple Symbols', 'Segoe UI Symbol', 'Noto Sans Symbols2', var(--font-display),
+    sans-serif;
   font-size: 20px;
   letter-spacing: 0.5em;
   color: var(--marigold-700);
@@ -300,4 +302,50 @@
 
 .tiptap > *:last-child {
   margin-bottom: 0;
+}
+
+/* ===================================================================
+   Provider setup banner (side panel · Suggestions tab)
+   The gradient is three times the banner width and never repeats, so the
+   pan has no tile edge to cut across — an angled gradient can't line up
+   with its own repeat. `alternate` sends it back the way it came, which
+   keeps the loop from snapping at the restart.
+   =================================================================== */
+
+.provider-aurora {
+  background-size: 300% 100%;
+  background-repeat: no-repeat;
+  animation: provider-aurora 14s ease-in-out infinite;
+}
+
+@keyframes provider-aurora {
+  from {
+    background-position: 0% 50%;
+  }
+  to {
+    background-position: 100% 50%;
+  }
+}
+
+.provider-orb {
+  animation: provider-orb 6s ease-in-out infinite;
+}
+
+@keyframes provider-orb {
+  0%,
+  100% {
+    opacity: 0.55;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.9;
+    transform: scale(1.1);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .provider-aurora,
+  .provider-orb {
+    animation: none;
+  }
 }

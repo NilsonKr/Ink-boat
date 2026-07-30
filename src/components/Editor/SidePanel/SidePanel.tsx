@@ -7,16 +7,18 @@ import SuggestionsTab from '@/components/Editor/SidePanel/SuggestionsTab'
 import { PANEL_TABS } from '@/lib/constants/editor'
 
 import type { Note, PanelTab } from '@/types/notes'
+import type { ProviderKeySummary } from '@/types/providers'
 
 type ComponentProps = {
   draftSlug?: string | null
   notes: Note[]
+  providerKeys: ProviderKeySummary[]
 }
 
 const tabStyles =
   'flex flex-1 items-center justify-center gap-[7px] border-b-2 px-3 py-4 cursor-pointer font-mono text-[10px] uppercase tracking-[0.14em] transition-colors'
 
-const SidePanel: React.FC<ComponentProps> = ({ draftSlug, notes }) => {
+const SidePanel: React.FC<ComponentProps> = ({ draftSlug, notes, providerKeys }) => {
   const [tab, setTab] = useState<PanelTab>('notes')
 
   return (
@@ -42,7 +44,11 @@ const SidePanel: React.FC<ComponentProps> = ({ draftSlug, notes }) => {
         ))}
       </div>
 
-      {tab === 'notes' ? <NotesTab draftSlug={draftSlug} notes={notes} /> : <SuggestionsTab />}
+      {tab === 'notes' ? (
+        <NotesTab draftSlug={draftSlug} notes={notes} />
+      ) : (
+        <SuggestionsTab providerKeys={providerKeys} />
+      )}
     </aside>
   )
 }

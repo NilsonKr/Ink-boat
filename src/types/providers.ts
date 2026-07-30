@@ -6,6 +6,7 @@ export type ProviderMeta = {
   label: string
   keyPrefix: string
   placeholder: string
+  keyNameExample: string
   consoleLabel: string
   consoleUrl: string
 }
