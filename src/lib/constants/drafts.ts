@@ -1,7 +1,20 @@
-import type { StatusMeta, DraftStatus, DraftsCopy } from '@/types/drafts'
+import type { StatusMeta, DraftStatus, DraftsCopy, DraftRowCopy } from '@/types/drafts'
 
 /** Character budget for the hero preview — the excerpt sits in a 52ch column. */
 export const HERO_EXCERPT_LENGTH = 160
+
+/** How long the Share button holds its "Copied" label after a successful write. */
+export const COPIED_FEEDBACK_DELAY = 1800
+
+export const DRAFT_ROW_COPY: DraftRowCopy = {
+  share: 'Share',
+  shareCopied: 'Copied',
+  menuTrigger: 'Draft actions',
+  copyLink: 'Copy link',
+  publish: 'Publish',
+  settings: 'Settings',
+  remove: 'Delete draft',
+}
 
 export const STATUS_META: Record<DraftStatus, StatusMeta> = {
   DRAFT: {

@@ -19,7 +19,7 @@ const DraftsHero: React.FC<DraftsHeroProps> = ({ draft, preview, userInitial, co
 
   return (
     <>
-      <div className="fixed inset-0 z-0 overflow-hidden bg-[var(--espresso-800)]">
+      <div className="sticky inset-0  overflow-hidden bg-[var(--espresso-800)]">
         <span
           aria-hidden
           className="pointer-events-none absolute -top-[190px] -right-[120px] size-[480px] rounded-full bg-[rgba(110,53,81,0.35)]"

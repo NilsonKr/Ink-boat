@@ -24,6 +24,16 @@ export type DraftsFilterTab = {
   label: string
 }
 
+export type DraftRowCopy = {
+  share: string
+  shareCopied: string
+  menuTrigger: string
+  copyLink: string
+  publish: string
+  settings: string
+  remove: string
+}
+
 export type DraftsHeroCopy = {
   publication: string
   navStories: string

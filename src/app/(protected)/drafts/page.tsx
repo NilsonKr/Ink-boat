@@ -28,8 +28,7 @@ const DraftsPage = async () => {
         copy={DRAFTS_COPY.hero}
       />
 
-      <div className="relative z-[2] mt-8">
-        <div className="h-[56vh]" />
+      <div className="relative z-[2] ">
         <DraftsView drafts={draftList} copy={DRAFTS_COPY} />
       </div>
     </div>
