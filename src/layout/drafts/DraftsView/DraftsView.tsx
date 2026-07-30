@@ -4,7 +4,6 @@ import Link from 'next/link'
 import { useMemo, useState } from "react"
 
 // component imports
-import { Button } from "@/components/ui/button"
 import DraftRow from "@/components/drafts/DraftRow"
 import FilterRail from "@/components/drafts/FilterRail"
 
@@ -50,8 +49,8 @@ const DraftsView: React.FC<DraftsViewProps> = ({ drafts, copy }) => {
   )
 
   return (
-    <section className="min-h-screen bg-[var(--sand-200)] px-14 py-14">
-      <div className="mx-auto max-w-[928px] rounded-[var(--radius-card)] bg-[var(--paper-100)] px-[60px] pb-[64px] pt-[56px] shadow-[var(--shadow-card)]">
+    <section className="mx-auto mb-[120px] max-w-[1040px] px-14">
+      <div className="rounded-[var(--radius-card)] bg-[var(--paper-100)] px-[60px] pb-[64px] pt-[56px] shadow-[var(--shadow-card)]">
         <div className="flex items-end justify-between gap-6">
           <div>
             <p className="mb-[14px] font-mono text-[11px] uppercase tracking-[0.16em] text-[var(--plum-500)]">

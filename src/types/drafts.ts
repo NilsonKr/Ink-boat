@@ -24,12 +24,35 @@ export type DraftsFilterTab = {
   label: string
 }
 
+export type DraftRowCopy = {
+  share: string
+  shareCopied: string
+  menuTrigger: string
+  copyLink: string
+  publish: string
+  settings: string
+  remove: string
+}
+
+export type DraftsHeroCopy = {
+  publication: string
+  navStories: string
+  navExplore: string
+  navExploreBadge: string
+  editedPrefix: string
+  cta: string
+  emptyTitle: string
+  emptyExcerpt: string
+  emptyCta: string
+}
+
 export type DraftsCopy = {
   eyebrow: string
   heading: string
   subtitle: string
   newDraft: string
   filters: Record<DraftsFilter, string>
+  hero: DraftsHeroCopy
 }
 
 export type DraftMetadata = {

@@ -1,6 +1,7 @@
 'use client'
 import { useRouter } from "next/navigation"
 
+import DraftRowActions from "@/components/drafts/DraftRowActions"
 import StatusBadge from "@/components/drafts/StatusBadge"
 
 import { formatWords, readingTime } from "@/lib/drafts"
@@ -42,11 +43,16 @@ const DraftRow: React.FC<DraftRowProps> = ({ draft, index }) => {
         </p>
       </div>
 
-      <div className="flex flex-col items-end gap-[18px] pt-[4px]">
+      <div className="relative flex flex-col items-end justify-between self-stretch gap-6 pt-[4px] whitespace-nowrap">
         <StatusBadge status={draft.status} />
-        <span className="-translate-x-[6px] font-display text-[22px] text-[var(--plum-500)] opacity-0 transition-all duration-200 group-hover:translate-x-0 group-hover:opacity-100">
-          →
-        </span>
+
+
+        <div className="flex items-center gap-4" >
+          <span className="pointer-events-none -translate-x-[8px]  font-display text-[24px] text-[var(--plum-500)] opacity-0 transition-all duration-200 group-hover:translate-x-0 group-hover:opacity-100">
+            →
+          </span>
+          <DraftRowActions publicId={draft.publicId} />
+        </div>
       </div>
     </article>
   )
