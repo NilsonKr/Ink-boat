@@ -1,11 +1,21 @@
 'use client'
-import { startTransition, useActionState, useEffect, useMemo, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useEditor, EditorContent, type Content } from '@tiptap/react'
 import StarterKit from '@tiptap/starter-kit'
 import Highlight from '@tiptap/extension-highlight'
 import { CharacterCount } from '@tiptap/extensions'
 
-import { saveDraftAction, updateDraftAction } from '@/actions/drafts'
+import { useAppDispatch, useAppSelector } from '@/store/hooks'
+import {
+  contentChanged,
+  metadataChanged,
+  selectDescription,
+  selectDraftSlug,
+  selectSaveStatus,
+  selectTitle,
+  selectWordCount,
+  wordCountMeasured,
+} from '@/store/slices/draftSlice'
 
 import AIPanel from '@/components/Editor/AIPanel'
 import Caret from '@/components/Editor/Caret'
@@ -18,7 +28,7 @@ import { EnterNewParagraph } from '@/components/Editor/extensions/EnterNewParagr
 import { Divider } from '@/components/Editor/extensions/Divider'
 import { CodeBlock } from '@/components/Editor/extensions/CodeBlock'
 
-import { debounce, getSerializableContent, trimTrailingEmptyParagraphs } from '@/lib/utils'
+import { getSerializableContent, trimTrailingEmptyParagraphs } from '@/lib/utils'
 
 import '@/components/Editor/editor.css'
 
@@ -34,43 +44,16 @@ type ComponentProps = {
   notes?: Note[]
 }
 
-type DraftActionPayload = {
-  json: Content
-  metadata?: DraftMetadata
-  wordCount?: number
-}
+export const Editor: React.FC<ComponentProps> = ({ content, status, notes = [] }) => {
+  const dispatch = useAppDispatch()
 
+  const draftSlug = useAppSelector(selectDraftSlug)
+  const title = useAppSelector(selectTitle)
+  const description = useAppSelector(selectDescription)
+  const wordCount = useAppSelector(selectWordCount)
+  const isSaved = useAppSelector(selectSaveStatus) === 'saved'
 
-export const Editor: React.FC<ComponentProps> = ({ content, publicId, title, description, status, notes = [] }) => {
-  const [draft, saveDraft] = useActionState(
-    async (_: any, payload: DraftActionPayload) => {
-      const res = await saveDraftAction(payload.json, payload.metadata, payload.wordCount)
-
-      setIsSaved(true)
-      window.history.replaceState(null, '', `/drafts/${res.publicId}`)
-      return res
-    }, null)
-
-  const saveDraftTransition = (json: Content, metadata?: DraftMetadata, wordCount?: number) => {
-    startTransition(() => saveDraft({ json, ...(metadata ? { metadata } : {}), wordCount }))
-  }
-
-  const [draftMetada, setDraftMetadata] = useState<DraftMetadata>({ title: title ?? '', description: description ?? '' })
-  const [isSaved, setIsSaved] = useState<boolean>(true)
   const [isAIPanelOpen, setIsAIPanelOpen] = useState<boolean>(false)
-  const [words, setWords] = useState<number>(0)
-
-  useEffect(() => {
-    const handleKeyDown = (event: KeyboardEvent) => {
-      if ((event.metaKey || event.ctrlKey) && event.key.toLowerCase() === 'k') {
-        event.preventDefault()
-        setIsAIPanelOpen(prev => !prev)
-      }
-    }
-
-    document.addEventListener('keydown', handleKeyDown)
-    return () => document.removeEventListener('keydown', handleKeyDown)
-  }, [])
 
   const editor = useEditor({
     extensions: [
@@ -89,51 +72,43 @@ export const Editor: React.FC<ComponentProps> = ({ content, publicId, title, des
     },
     immediatelyRender: false,
     onCreate({ editor }) {
-      setWords(editor.storage.characterCount.words())
+      dispatch(wordCountMeasured(editor.storage.characterCount.words()))
     },
     onUpdate({ editor }) {
-      const nextWords = editor.storage.characterCount.words()
-
-      setIsSaved(false)
-      setWords(nextWords)
-      updateSaveActionDebounced(getSerializableContent(editor), undefined, nextWords)
+      dispatch(contentChanged({
+        json: getSerializableContent(editor),
+        wordCount: editor.storage.characterCount.words(),
+      }))
     },
   })
 
-  const updateAction = async (slug: string, json: Content, metadata?: DraftMetadata, wordCount?: number) => {
-    const res = await updateDraftAction(slug, json, metadata, wordCount)
+  useEffect(() => {
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if ((event.metaKey || event.ctrlKey) && event.key.toLowerCase() === 'k') {
+        event.preventDefault()
+        setIsAIPanelOpen(prev => !prev)
+      }
+    }
 
-    setIsSaved(true)
-    return res
-  }
+    document.addEventListener('keydown', handleKeyDown)
+    return () => document.removeEventListener('keydown', handleKeyDown)
+  }, [])
 
-  const updateSaveActionDebounced = useMemo(() =>
-    debounce((json: Content, metadata?: DraftMetadata, wordCount?: number) => {
-      const draftSlug = publicId ?? draft?.publicId
+  // Browser history is external state, so the URL follows the id the store now holds.
+  // The guard skips the /drafts/[slug] route, where the seeded id already matches.
+  useEffect(() => {
+    if (!draftSlug || window.location.pathname === `/drafts/${draftSlug}`) return
 
-      return draftSlug ?
-        updateAction(publicId ?? draft?.publicId!, json, metadata, wordCount)
-        :
-        saveDraftTransition(json, metadata, wordCount)
+    window.history.replaceState(null, '', `/drafts/${draftSlug}`)
+  }, [draftSlug])
 
-    }, 1000),
-    [publicId, draft])
-
-  const handleSaveMetadata = (key: string, value: string) => {
-    setIsSaved(false)
-    setDraftMetadata(prev => {
-      const newMetadata = { ...prev, [key]: value }
-
-      updateSaveActionDebounced(null, newMetadata)
-
-      return newMetadata
-    })
-  }
+  const handleSaveMetadata = (key: keyof DraftMetadata, value: string) =>
+    dispatch(metadataChanged({ key, value }))
 
   return <div className='flex h-screen flex-col'>
     <Navbar
-      issue={draftMetada.title}
-      words={words}
+      issue={title}
+      words={wordCount}
       isSaved={isSaved}
       status={status}
     />
@@ -147,7 +122,7 @@ export const Editor: React.FC<ComponentProps> = ({ content, publicId, title, des
             rows={1}
             placeholder="Title"
             name="title"
-            value={draftMetada.title}
+            value={title}
             onChange={({ target }) => handleSaveMetadata('title', target.value)}
             className="
               w-full text-6xl font-medium font-display resize-none border-none bg-transparent outline-none
@@ -160,7 +135,7 @@ export const Editor: React.FC<ComponentProps> = ({ content, publicId, title, des
             rows={1}
             name='description'
             placeholder="Description"
-            value={draftMetada.description}
+            value={description}
             onChange={({ target }) => handleSaveMetadata('description', target.value)}
             className="
              w-full text-2xl font-display text-(--text-muted-color) mt-1
@@ -182,7 +157,7 @@ export const Editor: React.FC<ComponentProps> = ({ content, publicId, title, des
         </div>
       </section>
 
-      <SidePanel draftSlug={publicId ?? draft?.publicId} notes={notes} />
+      <SidePanel draftSlug={draftSlug} notes={notes} />
     </div>
 
     <AIPanel open={isAIPanelOpen} onClose={() => setIsAIPanelOpen(false)} />
