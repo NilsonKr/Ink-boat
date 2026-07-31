@@ -4,7 +4,7 @@ import type { AIProvider } from '@/lib/db/generated/enums'
 
 export type ProviderMeta = {
   label: string
-  keyPrefix: string
+  keyPrefixes: string[]
   placeholder: string
   keyNameExample: string
   consoleLabel: string
@@ -26,3 +26,5 @@ export type SaveProviderKeyResult =
   | { status: 'invalid_input'; message: string }
   | { status: 'invalid_key' }
   | { status: 'unreachable' }
+  /** The key checked out, but sealing or storing it failed on our side. */
+  | { status: 'failed' }

@@ -28,6 +28,12 @@ const hintStyles = 'font-display text-[12.5px] text-(--text-muted-color)'
 
 const actionStyles = 'font-mono text-[9px] uppercase tracking-[0.1em] text-(--plum-500) cursor-pointer'
 
+const SAVE_ERRORS = {
+  invalid_key: PROVIDER_KEY_COPY.invalidKey,
+  unreachable: PROVIDER_KEY_COPY.unreachable,
+  failed: PROVIDER_KEY_COPY.saveFailed,
+}
+
 const ProviderSetup: React.FC<ComponentProps> = ({
   initialProvider = PROVIDER_OPTIONS[0],
   initialLabel = '',
@@ -53,17 +59,25 @@ const ProviderSetup: React.FC<ComponentProps> = ({
     setError(null)
 
     startTransition(async () => {
-      const result = await saveProviderKeyAction({ provider, label: keyName.trim(), apiKey: apiKey.trim() })
+      try {
+        const result = await saveProviderKeyAction({
+          provider,
+          label: keyName.trim(),
+          apiKey: apiKey.trim(),
+        })
 
-      if (result.status === 'saved') {
-        // The typed key leaves the client the moment the server confirms it.
-        setApiKey('')
-        onConnected(result.key)
-        return
+        if (result.status === 'saved') {
+          // The typed key leaves the client the moment the server confirms it.
+          setApiKey('')
+          onConnected(result.key)
+          return
+        }
+
+        setError(result.status === 'invalid_input' ? result.message : SAVE_ERRORS[result.status])
+      } catch {
+        // A dropped request or a server crash still has to say something.
+        setError(PROVIDER_KEY_COPY.saveFailed)
       }
-
-      if (result.status === 'invalid_input') setError(result.message)
-      else setError(PROVIDER_KEY_COPY[result.status === 'invalid_key' ? 'invalidKey' : 'unreachable'])
     })
   }
 

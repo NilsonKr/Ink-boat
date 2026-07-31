@@ -30,23 +30,32 @@ export const saveProviderKeyAction = async (
   if (check.status !== 'valid') return { status: check.status }
 
   const userId = session.user.id
-  // The plaintext lives in this action only. What leaves it is the sealed buffer and the
-  // last four characters the connected bar needs for its mask.
-  const sealed = {
-    ciphertext: sealApiKey({ apiKey, userId, provider }),
-    keyVersion: CURRENT_KEY_VERSION,
-    last4: apiKey.slice(-4),
+
+  // A missing or malformed PROVIDER_SECRET_KEY makes sealApiKey throw. Letting that
+  // escape reaches the client as an opaque digest, and the form would show nothing at
+  // all, so it becomes a status the setup step can render.
+  try {
+    // The plaintext lives in this action only. What leaves it is the sealed buffer and
+    // the last four characters the connected bar needs for its mask.
+    const sealed = {
+      ciphertext: sealApiKey({ apiKey, userId, provider }),
+      keyVersion: CURRENT_KEY_VERSION,
+      last4: apiKey.slice(-4),
+    }
+
+    // One key per provider: a second save replaces the old row instead of adding to it.
+    const key = await prisma.providerKey.upsert({
+      where: { userId_provider: { userId, provider } },
+      create: { userId, provider, label, ...sealed },
+      update: { label, lastUsedAt: null, ...sealed },
+      select: PROVIDER_KEY_SUMMARY_SELECT,
+    })
+
+    return { status: 'saved', key }
+  } catch {
+    // The thrown value can carry the key material, so it never leaves this catch.
+    return { status: 'failed' }
   }
-
-  // One key per provider: a second save replaces the old row instead of adding to it.
-  const key = await prisma.providerKey.upsert({
-    where: { userId_provider: { userId, provider } },
-    create: { userId, provider, label, ...sealed },
-    update: { label, lastUsedAt: null, ...sealed },
-    select: PROVIDER_KEY_SUMMARY_SELECT,
-  })
-
-  return { status: 'saved', key }
 }
 
 export const getProviderKeysAction = async (): Promise<ProviderKeySummary[]> => {

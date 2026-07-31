@@ -19,7 +19,7 @@ const tabStyles =
   'flex flex-1 items-center justify-center gap-[7px] border-b-2 px-3 py-4 cursor-pointer font-mono text-[10px] uppercase tracking-[0.14em] transition-colors'
 
 const SidePanel: React.FC<ComponentProps> = ({ draftSlug, notes, providerKeys }) => {
-  const [tab, setTab] = useState<PanelTab>('notes')
+  const [tab, setTab] = useState<PanelTab>('suggestions')
 
   return (
     <aside className='flex min-h-0 flex-col border-l border-(--line)'>

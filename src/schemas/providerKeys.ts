@@ -18,9 +18,13 @@ export const saveProviderKeySchema = z
       .max(200, PROVIDER_KEY_COPY.keyTooLong),
   })
   // A prefix check catches the common paste error before we spend a request on it.
-  .refine(({ provider, apiKey }) => apiKey.startsWith(AI_PROVIDERS[provider].keyPrefix), {
-    message: PROVIDER_KEY_COPY.prefixMismatch,
-    path: ['apiKey'],
-  })
+  .refine(
+    ({ provider, apiKey }) =>
+      AI_PROVIDERS[provider].keyPrefixes.some(prefix => apiKey.startsWith(prefix)),
+    {
+      message: PROVIDER_KEY_COPY.prefixMismatch,
+      path: ['apiKey'],
+    }
+  )
 
 export type SaveProviderKeyInput = z.infer<typeof saveProviderKeySchema>

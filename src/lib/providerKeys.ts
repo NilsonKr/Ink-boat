@@ -8,7 +8,9 @@ import type { AIProvider, ProviderKeyCheck } from '@/types/providers'
 // `server-only` is not installed, so the boundary is held here: this module opens
 // plaintext keys and must never reach a client bundle.
 if (typeof window !== 'undefined')
-  throw new Error('lib/providerKeys is server-only and must not be imported by a client component')
+  throw new Error(
+    'lib/providerKeys is server-only and must not be imported by a client component'
+  )
 
 /** The columns a stored key may expose. Every client-facing query uses this select. */
 export const PROVIDER_KEY_SUMMARY_SELECT = {
@@ -35,10 +37,11 @@ const isKeyRejection = (error: unknown): boolean => {
  */
 export const validateProviderKey = async (
   provider: AIProvider,
-  apiKey: string,
+  apiKey: string
 ): Promise<ProviderKeyCheck> => {
   try {
-    if (provider === 'GEMINI') await getGeminiClient(apiKey).models.list({ config: { pageSize: 1 } })
+    if (provider === 'GEMINI')
+      await getGeminiClient(apiKey).models.list({ config: { pageSize: 1 } })
     else await getAnthropicClient(apiKey).models.list({ limit: 1 })
 
     return { status: 'valid' }
@@ -54,7 +57,7 @@ export const validateProviderKey = async (
  */
 export const getDecryptedProviderKey = async (
   userId: string,
-  provider: AIProvider,
+  provider: AIProvider
 ): Promise<string | null> => {
   const stored = await prisma.providerKey.findUnique({
     where: { userId_provider: { userId, provider } },
@@ -70,7 +73,10 @@ export const getDecryptedProviderKey = async (
     keyVersion: stored.keyVersion,
   })
 
-  await prisma.providerKey.update({ where: { id: stored.id }, data: { lastUsedAt: new Date() } })
+  await prisma.providerKey.update({
+    where: { id: stored.id },
+    data: { lastUsedAt: new Date() },
+  })
 
   return apiKey
 }
