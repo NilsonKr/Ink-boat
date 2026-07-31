@@ -1,8 +1,9 @@
 import type { Content } from '@tiptap/react'
 
 import { getDraftAction } from '@/actions/drafts'
+import { getProviderKeysAction } from '@/actions/providerKeys'
 
-import EditorStoreProvider from '@/providers/EditorStoreProvider'
+import EditorStoreProvider from '@/store/providers/EditorStoreProvider'
 import Editor from '@/components/Editor'
 
 type ComponentProps = {
@@ -12,7 +13,7 @@ type ComponentProps = {
 const Page: React.FC<ComponentProps> = async ({ params }) => {
   const { slug } = await params
 
-  const draft = await getDraftAction(slug)
+  const [draft, providerKeys] = await Promise.all([getDraftAction(slug), getProviderKeysAction()])
 
   return (
     // The key forces a fresh store per draft. Without it, a move between two slugs
@@ -34,6 +35,7 @@ const Page: React.FC<ComponentProps> = async ({ params }) => {
         description={draft?.description}
         status={draft?.status}
         notes={draft?.notes}
+        providerKeys={providerKeys}
       />
     </EditorStoreProvider>
   )

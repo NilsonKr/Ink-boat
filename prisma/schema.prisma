@@ -31,6 +31,7 @@ model User {
   sessions      Session[]
   accounts      Account[]
   drafts        Draft[]
+  providerKeys  ProviderKey[]
 
   @@unique([email])
   @@map("user")
@@ -98,6 +99,33 @@ enum DraftStatus {
   DRAFT
   PUBLISHED
   ARCHIVED
+}
+
+enum AIProvider {
+  GEMINI
+  ANTHROPIC
+}
+
+// A user's own key for one AI provider (BYOK). The key is sealed with AES-256-GCM
+// before it reaches this table — see src/lib/crypto/providerKeys.ts.
+model ProviderKey {
+  id       BigInt @id @default(autoincrement())
+  publicId String @unique @default(nanoid(12)) @map("public_id") @db.VarChar(12) // named by the client on delete
+
+  provider   AIProvider
+  label      String // user-facing name, so two keys are told apart
+  ciphertext Bytes // iv (12 B) || authTag (16 B) || sealed key
+  keyVersion Int       @default(1) @map("key_version") // which master secret sealed this row
+  last4      String    @map("last_4") @db.VarChar(4) // renders the masked key with no decrypt
+  lastUsedAt DateTime? @map("last_used_at")
+  createdAt  DateTime  @default(now()) @map("created_at")
+  updatedAt  DateTime  @updatedAt @map("updated_at")
+
+  userId String @map("user_id")
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, provider])
+  @@map("provider_keys")
 }
 
 model Draft {

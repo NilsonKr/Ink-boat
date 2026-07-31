@@ -3,8 +3,8 @@ import { startTransition, useOptimistic, useState } from 'react'
 
 import { createNoteAction, deleteNoteAction, updateNoteAction } from '@/actions/notes'
 
-import NoteCard from '@/components/Editor/SidePanel/NoteCard'
-import NoteComposer from '@/components/Editor/SidePanel/NoteComposer'
+import NoteCard from '@/components/Editor/SidePanel/NotesTab/NoteCard'
+import NoteComposer from '@/components/Editor/SidePanel/NotesTab/NoteComposer'
 
 import { EDITOR_COPY } from '@/lib/constants/editor'
 

@@ -77,8 +77,36 @@ export type EditorCopy = {
     untitled: string
     empty: string
   }
+  providerSetup: {
+    eyebrow: string
+    mark: string
+    heading: string
+    intro: string
+    providerLabel: string
+    providerHint: string
+    keyNameLabel: string
+    keyNameHint: string
+    apiKeyLabel: string
+    reveal: string
+    hide: string
+    keyHint: string
+    connect: string
+    connectIcon: string
+    connecting: string
+    cancel: string
+    connectedManage: string
+  }
+  suggestions: {
+    emptyHeading: string
+    emptyBody: string
+    steps: string[]
+    noSelection: string
+    waitingSelection: string
+    askPlaceholder: string
+    askShortcut: string
+    modelLabel: string
+  }
   panel: {
-    suggestionsStub: string
     noteEyebrow: string
     addNote: string
     emptyNotes: string

@@ -1,5 +1,5 @@
 'use client'
-import NoteComposer from '@/components/Editor/SidePanel/NoteComposer'
+import NoteComposer from '@/components/Editor/SidePanel/NotesTab/NoteComposer'
 
 import { EDITOR_COPY } from '@/lib/constants/editor'
 
