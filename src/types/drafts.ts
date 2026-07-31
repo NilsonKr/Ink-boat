@@ -96,8 +96,17 @@ export type EditorCopy = {
     cancel: string
     connectedManage: string
   }
+  suggestions: {
+    emptyHeading: string
+    emptyBody: string
+    steps: string[]
+    noSelection: string
+    waitingSelection: string
+    askPlaceholder: string
+    askShortcut: string
+    modelLabel: string
+  }
   panel: {
-    suggestionsStub: string
     noteEyebrow: string
     addNote: string
     emptyNotes: string

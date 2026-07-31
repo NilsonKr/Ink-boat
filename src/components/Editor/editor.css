@@ -343,9 +343,44 @@
   }
 }
 
+/* ===================================================================
+   Aurora ring (side panel · Suggestions tab)
+   A mask cuts the hole, so the ring sits on any surface without having
+   to repaint an inner disc in the panel colour.
+   =================================================================== */
+
+.aurora-ring {
+  --ring-width: 2.5px;
+
+  background: linear-gradient(
+    110deg,
+    var(--plum-500),
+    var(--plum-300),
+    var(--marigold-500),
+    var(--plum-500)
+  );
+  background-size: 200% 100%;
+  animation: aurora-ring 6s linear infinite;
+  mask: radial-gradient(
+    farthest-side,
+    transparent calc(100% - var(--ring-width)),
+    #000 calc(100% - var(--ring-width))
+  );
+}
+
+@keyframes aurora-ring {
+  from {
+    background-position: 0% 50%;
+  }
+  to {
+    background-position: 200% 50%;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .provider-aurora,
-  .provider-orb {
+  .provider-orb,
+  .aurora-ring {
     animation: none;
   }
 }

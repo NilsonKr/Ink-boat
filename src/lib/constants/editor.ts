@@ -52,8 +52,18 @@ export const EDITOR_COPY: EditorCopy = {
     cancel: 'Cancel',
     connectedManage: 'Manage',
   },
+  suggestions: {
+    emptyHeading: 'Nothing suggested yet',
+    emptyBody:
+      'Select a passage in the draft, then get suggestions on it — takes appear here and stay pinned to that selection.',
+    steps: ['Select text in the galley', 'Get suggestions on it', 'Weave the take you like'],
+    noSelection: 'No selection yet',
+    waitingSelection: 'Waiting for a selection…',
+    askPlaceholder: 'Ask about the draft…',
+    askShortcut: '⌘↵',
+    modelLabel: 'Model',
+  },
   panel: {
-    suggestionsStub: 'The margin is quiet for now.',
     noteEyebrow: 'Note · You',
     addNote: '＋ Note',
     emptyNotes: 'Nothing in the margin yet.',

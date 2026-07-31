@@ -10,6 +10,11 @@ export const AI_PROVIDERS: Record<AIProvider, ProviderMeta> = {
     keyNameExample: 'Gemini — personal',
     consoleLabel: 'Google AI Studio',
     consoleUrl: 'https://aistudio.google.com/apikey',
+    models: [
+      { id: 'gemini-2.5-pro', label: 'Gemini 2.5 Pro' },
+      { id: 'gemini-2.5-flash', label: 'Gemini 2.5 Flash' },
+      { id: 'gemini-2.0-flash', label: 'Gemini 2.0 Flash' },
+    ],
   },
   ANTHROPIC: {
     label: 'Anthropic (Claude)',
@@ -18,6 +23,11 @@ export const AI_PROVIDERS: Record<AIProvider, ProviderMeta> = {
     keyNameExample: 'Claude — personal',
     consoleLabel: 'the Anthropic Console',
     consoleUrl: 'https://console.anthropic.com/settings/keys',
+    models: [
+      { id: 'claude-opus-5', label: 'Claude Opus 5' },
+      { id: 'claude-sonnet-5', label: 'Claude Sonnet 5' },
+      { id: 'claude-haiku-4-5-20251001', label: 'Claude Haiku 4.5' },
+    ],
   },
 }
 

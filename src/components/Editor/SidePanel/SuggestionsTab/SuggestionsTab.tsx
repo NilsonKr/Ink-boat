@@ -1,10 +1,11 @@
 'use client'
 import { useState } from 'react'
 
+import AskComposer from '@/components/Editor/SidePanel/SuggestionsTab/AskComposer'
 import ProviderBar from '@/components/Editor/SidePanel/SuggestionsTab/ProviderBar'
 import ProviderSetup from '@/components/Editor/SidePanel/SuggestionsTab/ProviderSetup'
-
-import { EDITOR_COPY } from '@/lib/constants/editor'
+import SelectionTrigger from '@/components/Editor/SidePanel/SuggestionsTab/SelectionTrigger'
+import SuggestionsEmpty from '@/components/Editor/SidePanel/SuggestionsTab/SuggestionsEmpty'
 
 import type { ProviderKeySummary } from '@/types/providers'
 
@@ -13,8 +14,6 @@ type ComponentProps = {
 }
 
 const SuggestionsTab: React.FC<ComponentProps> = ({ providerKeys }) => {
-  const { panel } = EDITOR_COPY
-
   const [keys, setKeys] = useState<ProviderKeySummary[]>(providerKeys)
   const [isManaging, setIsManaging] = useState<boolean>(false)
 
@@ -40,11 +39,9 @@ const SuggestionsTab: React.FC<ComponentProps> = ({ providerKeys }) => {
     <div className='flex min-h-0 flex-1 flex-col'>
       <ProviderBar providerKey={connectedKey} onManage={() => setIsManaging(true)} />
 
-      <div className='flex-1 overflow-auto px-[26px] pt-[26px] pb-8'>
-        <p className='font-display text-[14px] italic text-(--text-label-color)'>
-          {panel.suggestionsStub}
-        </p>
-      </div>
+      <SuggestionsEmpty />
+      <SelectionTrigger />
+      <AskComposer provider={connectedKey.provider} />
     </div>
   )
 }

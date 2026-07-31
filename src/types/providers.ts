@@ -2,6 +2,11 @@ export type { AIProvider } from '@/lib/db/generated/enums'
 
 import type { AIProvider } from '@/lib/db/generated/enums'
 
+export type ProviderModel = {
+  id: string
+  label: string
+}
+
 export type ProviderMeta = {
   label: string
   keyPrefixes: string[]
@@ -9,6 +14,7 @@ export type ProviderMeta = {
   keyNameExample: string
   consoleLabel: string
   consoleUrl: string
+  models: ProviderModel[]
 }
 
 /** The only shape of a stored key that may cross to the client. */
