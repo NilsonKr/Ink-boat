@@ -1,7 +1,5 @@
 import Link from 'next/link'
 
-import ParallaxSurface from './draftsHero.animate'
-
 import { formatEditedAt, formatWords, readingTime } from '@/lib/drafts'
 
 import type { Draft, DraftsHeroCopy } from '@/types/drafts'
@@ -97,7 +95,6 @@ const DraftsHero: React.FC<DraftsHeroProps> = ({ draft, preview, userInitial, co
         </div>
       </div>
 
-      <ParallaxSurface />
     </>
   )
 }
