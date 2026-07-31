@@ -1,8 +1,8 @@
 'use client'
 import { useState } from 'react'
 
-import ProviderBar from '@/components/Editor/SidePanel/ProviderBar'
-import ProviderSetup from '@/components/Editor/SidePanel/ProviderSetup'
+import ProviderBar from '@/components/Editor/SidePanel/SuggestionsTab/ProviderBar'
+import ProviderSetup from '@/components/Editor/SidePanel/SuggestionsTab/ProviderSetup'
 
 import { EDITOR_COPY } from '@/lib/constants/editor'
 

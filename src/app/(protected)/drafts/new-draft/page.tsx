@@ -1,6 +1,6 @@
 import { getProviderKeysAction } from '@/actions/providerKeys'
 
-import EditorStoreProvider from '@/providers/EditorStoreProvider'
+import EditorStoreProvider from '@/store/providers/EditorStoreProvider'
 import Editor from '@/components/Editor'
 
 const page = async () => {

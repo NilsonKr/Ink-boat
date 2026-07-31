@@ -3,7 +3,7 @@ import type { Content } from '@tiptap/react'
 import { getDraftAction } from '@/actions/drafts'
 import { getProviderKeysAction } from '@/actions/providerKeys'
 
-import EditorStoreProvider from '@/providers/EditorStoreProvider'
+import EditorStoreProvider from '@/store/providers/EditorStoreProvider'
 import Editor from '@/components/Editor'
 
 type ComponentProps = {
