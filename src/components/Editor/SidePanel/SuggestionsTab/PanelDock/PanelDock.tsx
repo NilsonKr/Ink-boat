@@ -27,7 +27,7 @@ const PanelDock: React.FC<ComponentProps> = ({ provider, selection, mode, onMode
   const isSuggest = tab === 'suggest'
 
   return (
-    <div className='flex flex-none flex-col border-t-2 border-(--espresso-800) bg-(--paper-50)'>
+    <div className='min-h-[120px] flex flex-none flex-col border-t-2 border-(--espresso-800) bg-(--paper-50)'>
       <button
         type='button'
         onClick={handleSwitchTab}
@@ -40,7 +40,7 @@ const PanelDock: React.FC<ComponentProps> = ({ provider, selection, mode, onMode
         <span aria-hidden className='text-[12px] leading-none'>
           {suggestions.dockSwitchIcon}
         </span>
-        {isSuggest ? suggestions.dockSuggest : suggestions.dockAsk}
+        {isSuggest ? suggestions.dockAsk : suggestions.dockSuggest}
       </button>
 
       {isSuggest ? (

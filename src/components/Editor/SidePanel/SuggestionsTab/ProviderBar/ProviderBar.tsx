@@ -15,7 +15,7 @@ const ProviderBar: React.FC<ComponentProps> = ({ providerKey, onManage }) => {
   const { last4, provider } = providerKey
 
   return (
-    <div className='flex flex-none items-center justify-between gap-3.5 border-b border-(--line) bg-(--paper-50) px-[22px] py-3.5'>
+    <div className='flex flex-none items-center justify-between gap-3.5 border-b border-(--line) bg-(--paper-50) px-[18px] py-3'>
       <div className='flex min-w-0 items-center gap-[11px]'>
         <span
           aria-hidden
