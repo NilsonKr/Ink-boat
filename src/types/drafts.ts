@@ -97,11 +97,29 @@ export type EditorCopy = {
     connectedManage: string
   }
   suggestions: {
+    mark: string
+    panelHeading: string
+    panelMode: string
+    keyPrefix: string
+    keyMask: string
     emptyHeading: string
     emptyBody: string
     steps: string[]
+    resultsEyebrow: string
+    pinnedPrefix: string
+    weaveIn: string
+    wovenBadge: string
+    wovenInto: string
+    undo: string
+    moreSuffix: string
+    rerunIcon: string
     noSelection: string
-    waitingSelection: string
+    wordsSuffix: string
+    runSuggestions: string
+    modeMenuHeading: string
+    dockSwitchIcon: string
+    dockSuggest: string
+    dockAsk: string
     askPlaceholder: string
     askShortcut: string
     modelLabel: string

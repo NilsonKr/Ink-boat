@@ -344,23 +344,50 @@
 }
 
 /* ===================================================================
-   Aurora ring (side panel · Suggestions tab)
-   A mask cuts the hole, so the ring sits on any surface without having
-   to repaint an inner disc in the panel colour.
+   Aurora ring and fill (side panel · Suggestions tab)
    =================================================================== */
 
+/* The sweep lives on a ::before that slides by transform, so the browser
+   composites it instead of repainting a background every frame.
+   The gradient repeats, and the slide covers exactly one colour period
+   measured across x — sin() converts the period from the tilted gradient
+   axis to the horizontal. That makes the loop seam invisible. */
+.aurora-ring,
+.aurora-fill {
+  --aurora-angle: 110deg;
+  --aurora-period: 120px;
+  --aurora-shift: calc(var(--aurora-period) / sin(var(--aurora-angle)));
+
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+}
+
+.aurora-ring::before,
+.aurora-fill::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  /* Overhang gives the slide somewhere to travel from. */
+  right: calc(-1 * var(--aurora-shift));
+  z-index: -1;
+  background: repeating-linear-gradient(
+    var(--aurora-angle),
+    var(--plum-500) 0,
+    var(--plum-300) calc(var(--aurora-period) / 3),
+    var(--marigold-500) calc(var(--aurora-period) / 3 * 2),
+    var(--plum-500) var(--aurora-period)
+  );
+  animation: aurora-sweep 6s linear infinite;
+}
+
+/* A mask cuts the hole, so the ring sits on any surface without having
+   to repaint an inner disc in the panel colour. */
 .aurora-ring {
   --ring-width: 2.5px;
 
-  background: linear-gradient(
-    110deg,
-    var(--plum-500),
-    var(--plum-300),
-    var(--marigold-500),
-    var(--plum-500)
-  );
-  background-size: 200% 100%;
-  animation: aurora-ring 6s linear infinite;
   mask: radial-gradient(
     farthest-side,
     transparent calc(100% - var(--ring-width)),
@@ -368,19 +395,32 @@
   );
 }
 
-@keyframes aurora-ring {
-  from {
-    background-position: 0% 50%;
-  }
+@keyframes aurora-sweep {
   to {
-    background-position: 200% 50%;
+    transform: translateX(calc(-1 * var(--aurora-shift)));
+  }
+}
+
+.live-dot {
+  animation: live-dot 2s ease infinite;
+}
+
+@keyframes live-dot {
+  0%,
+  100% {
+    opacity: 0.35;
+  }
+  50% {
+    opacity: 1;
   }
 }
 
 @media (prefers-reduced-motion: reduce) {
   .provider-aurora,
   .provider-orb,
-  .aurora-ring {
+  .aurora-ring::before,
+  .aurora-fill::before,
+  .live-dot {
     animation: none;
   }
 }
