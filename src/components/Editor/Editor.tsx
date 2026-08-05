@@ -5,6 +5,7 @@ import StarterKit from '@tiptap/starter-kit'
 import Highlight from '@tiptap/extension-highlight'
 import { CharacterCount } from '@tiptap/extensions'
 
+import EditorProvider from '@/context/EditorProvider'
 import { useAppDispatch, useAppSelector } from '@/store/hooks'
 import {
   contentChanged,
@@ -112,63 +113,65 @@ export const Editor: React.FC<ComponentProps> = ({
   const handleSaveMetadata = (key: keyof DraftMetadata, value: string) =>
     dispatch(metadataChanged({ key, value }))
 
-  return <div className='flex h-screen flex-col'>
-    <Navbar
-      issue={title}
-      words={wordCount}
-      isSaved={isSaved}
-      status={status}
-    />
+  return <EditorProvider editor={editor}>
+    <div className='flex h-screen flex-col'>
+      <Navbar
+        issue={title}
+        words={wordCount}
+        isSaved={isSaved}
+        status={status}
+      />
 
-    <div className='grid min-h-0 flex-1 grid-cols-[250px_1fr_360px]'>
-      <ContentsRail editor={editor} />
+      <div className='grid min-h-0 flex-1 grid-cols-[250px_1fr_360px]'>
+        <ContentsRail editor={editor} />
 
-      <section className='overflow-y-auto bg-(--paper-100) px-16 pt-13 pb-14'>
-        <div className='mx-auto w-full max-w-[68ch]'>
-          <textarea
-            rows={1}
-            placeholder="Title"
-            name="title"
-            value={title}
-            onChange={({ target }) => handleSaveMetadata('title', target.value)}
-            className="
-              w-full text-6xl font-medium font-display resize-none border-none bg-transparent outline-none
-              field-sizing-content overflow-hidden
-              leading-tight
-              placeholder:text-stone-300
-            "
-          />
-          <textarea
-            rows={1}
-            name='description'
-            placeholder="Description"
-            value={description}
-            onChange={({ target }) => handleSaveMetadata('description', target.value)}
-            className="
-             w-full text-2xl font-display text-(--text-muted-color) mt-1
-             resize-none border-none bg-transparent outline-none
-              field-sizing-content overflow-hidden
-              leading-tight
-              placeholder:text-stone-300
-            "
-          />
+        <section className='overflow-y-auto bg-(--paper-100) px-16 pt-13 pb-14'>
+          <div className='mx-auto w-full max-w-[68ch]'>
+            <textarea
+              rows={1}
+              placeholder="Title"
+              name="title"
+              value={title}
+              onChange={({ target }) => handleSaveMetadata('title', target.value)}
+              className="
+                w-full text-6xl font-medium font-display resize-none border-none bg-transparent outline-none
+                field-sizing-content overflow-hidden
+                leading-tight
+                placeholder:text-stone-300
+              "
+            />
+            <textarea
+              rows={1}
+              name='description'
+              placeholder="Description"
+              value={description}
+              onChange={({ target }) => handleSaveMetadata('description', target.value)}
+              className="
+               w-full text-2xl font-display text-(--text-muted-color) mt-1
+               resize-none border-none bg-transparent outline-none
+                field-sizing-content overflow-hidden
+                leading-tight
+                placeholder:text-stone-300
+              "
+            />
 
-          <div className='h-[2px] bg-(--espresso-800) mt-[22px]' />
+            <div className='h-[2px] bg-(--espresso-800) mt-[22px]' />
 
-          <section className='relative mt-20'>
-            <EditorContent editor={editor} />
-            <Caret editor={editor} />
-            <SelectionToolbar editor={editor} />
-            <InsertMenu editor={editor} />
-          </section>
-        </div>
-      </section>
+            <section className='relative mt-20'>
+              <EditorContent editor={editor} />
+              <Caret editor={editor} />
+              <SelectionToolbar editor={editor} />
+              <InsertMenu editor={editor} />
+            </section>
+          </div>
+        </section>
 
-      <SidePanel draftSlug={draftSlug} notes={notes} providerKeys={providerKeys} />
+        <SidePanel draftSlug={draftSlug} notes={notes} providerKeys={providerKeys} />
+      </div>
+
+      <AIPanel open={isAIPanelOpen} onClose={() => setIsAIPanelOpen(false)} />
     </div>
-
-    <AIPanel open={isAIPanelOpen} onClose={() => setIsAIPanelOpen(false)} />
-  </div>
+  </EditorProvider>
 }
 
 export default Editor

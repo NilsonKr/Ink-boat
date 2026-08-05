@@ -21,6 +21,19 @@ export type DraftSelection = {
   wordCount: number
 }
 
+/** What the editor reports. The positions stay out of `DraftSelection`, which is what the panel renders. */
+export type EditorSelection = DraftSelection & {
+  from: number
+  to: number
+}
+
+/** The passage plus the blocks on either side of it — everything the model reads about the draft body. */
+export type SuggestionContext = {
+  before: string
+  selected: string
+  after: string
+}
+
 export type Suggestion = {
   id: string
   /** Letter that orders the take in the list, e.g. `A`. */
