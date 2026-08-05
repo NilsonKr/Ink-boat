@@ -11,7 +11,9 @@ import type { DraftSelection, SuggestionModeKey } from '@/types/suggestions'
 type ComponentProps = {
   selection: DraftSelection | null
   mode: SuggestionModeKey
+  isRunning: boolean
   onModeChange: (mode: SuggestionModeKey) => void
+  onRun: () => void
 }
 
 const rowStyles = 'relative flex items-center gap-[11px] py-[11px] pr-3.5 pl-[18px]'
@@ -21,7 +23,13 @@ const modeButtonStyles =
 const runButtonStyles =
   'aurora-fill flex items-center justify-center px-[13px] py-[9px] font-display text-[14px] text-white'
 
-const SelectionTrigger: React.FC<ComponentProps> = ({ selection, mode, onModeChange }) => {
+const SelectionTrigger: React.FC<ComponentProps> = ({
+  selection,
+  mode,
+  isRunning,
+  onModeChange,
+  onRun,
+}) => {
   const [isMenuOpen, setIsMenuOpen] = useState<boolean>(false)
 
   const { suggestions } = EDITOR_COPY
@@ -83,9 +91,12 @@ const SelectionTrigger: React.FC<ComponentProps> = ({ selection, mode, onModeCha
         <button
           type='button'
           aria-label={suggestions.runSuggestions}
-          className={`${runButtonStyles} cursor-pointer`}
+          aria-busy={isRunning}
+          disabled={isRunning}
+          onClick={onRun}
+          className={`${runButtonStyles} ${isRunning ? 'opacity-60' : 'cursor-pointer'}`}
         >
-          {suggestions.rerunIcon}
+          {isRunning ? suggestions.runningIcon : suggestions.rerunIcon}
         </button>
       </div>
     </div>

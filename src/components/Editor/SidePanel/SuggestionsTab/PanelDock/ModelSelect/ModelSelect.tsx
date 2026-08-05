@@ -5,9 +5,11 @@ import type { AIProvider } from '@/types/providers'
 
 type ComponentProps = {
   provider: AIProvider
+  model: string
+  onModelChange: (model: string) => void
 }
 
-const ModelSelect: React.FC<ComponentProps> = ({ provider }) => {
+const ModelSelect: React.FC<ComponentProps> = ({ provider, model, onModelChange }) => {
   const { suggestions } = EDITOR_COPY
 
   const { models } = AI_PROVIDERS[provider]
@@ -20,7 +22,8 @@ const ModelSelect: React.FC<ComponentProps> = ({ provider }) => {
       <div className='relative inline-flex items-center'>
         <select
           aria-label={suggestions.modelLabel}
-          defaultValue={models[0].id}
+          value={model}
+          onChange={({ target }) => onModelChange(target.value)}
           className='cursor-pointer appearance-none border-none bg-transparent pr-3 font-mono text-[9px] tracking-[0.04em] text-(--text-body-color) outline-none'
         >
           {models.map(({ id, label }) => (

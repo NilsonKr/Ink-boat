@@ -1,8 +1,6 @@
 import type {
-  DraftSelection,
   SuggestionMode,
   SuggestionModeKey,
-  SuggestionSet,
   SuggestionsFailureStatus,
 } from '@/types/suggestions'
 
@@ -48,37 +46,3 @@ export const SUGGESTION_INPUT_COPY = {
   unknownModel: 'That model does not belong to the connected provider.',
 }
 
-/** Stub data — the panel shows the shape of a real run until the model is wired in. */
-
-export const SUGGESTION_SET_STUB: SuggestionSet = {
-  selection: {
-    mark: '¶2',
-    excerpt: '…a room you can furnish',
-    wordCount: 22,
-  },
-  mode: 'reformulate',
-  suggestedAgo: '12s ago',
-  remaining: 2,
-  suggestions: [
-    {
-      id: 'stub-a',
-      key: 'A',
-      tone: 'Warmer',
-      text: '…a chair dragged to the east window, a cup that steams unhurried, one sentence left open like a door ajar.',
-      status: 'idle',
-    },
-    {
-      id: 'stub-b',
-      key: 'B',
-      tone: 'Sparer',
-      text: '…and mornings are when I choose what gets to stay.',
-      status: 'woven',
-    },
-  ],
-}
-
-export const CURRENT_SELECTION_STUB: DraftSelection = {
-  mark: '¶3',
-  excerpt: '…the same forty minutes before anyone else’s day can make a claim on mine.',
-  wordCount: 27,
-}

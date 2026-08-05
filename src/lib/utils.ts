@@ -22,6 +22,17 @@ export function debounce<T extends (...args: any[]) => void>(func: T, wait: numb
   return debounced
 }
 
+/** Coarse relative time for a panel eyebrow. It reads at render, so it needs no timer. */
+export const formatAgo = (timestamp: number): string => {
+  const seconds = Math.max(Math.round((Date.now() - timestamp) / 1000), 0)
+
+  if (seconds < 60) return `${seconds}s ago`
+
+  const minutes = Math.round(seconds / 60)
+
+  return minutes < 60 ? `${minutes}m ago` : `${Math.round(minutes / 60)}h ago`
+}
+
 // TIPTAP EDITOR
 
 /**

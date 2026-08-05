@@ -7,9 +7,10 @@ import type { SuggestionSet } from '@/types/suggestions'
 
 type ComponentProps = {
   suggestionSet: SuggestionSet
+  onReveal: () => void
 }
 
-const SuggestionsList: React.FC<ComponentProps> = ({ suggestionSet }) => {
+const SuggestionsList: React.FC<ComponentProps> = ({ suggestionSet, onReveal }) => {
   const { suggestions: copy } = EDITOR_COPY
 
   const { selection, mode, suggestions, suggestedAgo, remaining } = suggestionSet
@@ -41,6 +42,7 @@ const SuggestionsList: React.FC<ComponentProps> = ({ suggestionSet }) => {
       {remaining > 0 && (
         <button
           type='button'
+          onClick={onReveal}
           className='mt-0.5 flex-none cursor-pointer text-left font-mono text-[9px] uppercase tracking-[0.1em] text-(--text-label-color) hover:text-(--text-body-color)'
         >
           {copy.rerunIcon} {remaining} {copy.moreSuffix} {selection.mark}

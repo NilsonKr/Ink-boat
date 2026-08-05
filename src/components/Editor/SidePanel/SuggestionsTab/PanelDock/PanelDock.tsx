@@ -14,10 +14,23 @@ type ComponentProps = {
   provider: AIProvider
   selection: DraftSelection | null
   mode: SuggestionModeKey
+  model: string
+  isRunning: boolean
   onModeChange: (mode: SuggestionModeKey) => void
+  onModelChange: (model: string) => void
+  onRun: () => void
 }
 
-const PanelDock: React.FC<ComponentProps> = ({ provider, selection, mode, onModeChange }) => {
+const PanelDock: React.FC<ComponentProps> = ({
+  provider,
+  selection,
+  mode,
+  model,
+  isRunning,
+  onModeChange,
+  onModelChange,
+  onRun,
+}) => {
   const [tab, setTab] = useState<SuggestionsDockTab>('suggest')
 
   const { suggestions } = EDITOR_COPY
@@ -44,13 +57,19 @@ const PanelDock: React.FC<ComponentProps> = ({ provider, selection, mode, onMode
       </button>
 
       {isSuggest ? (
-        <SelectionTrigger selection={selection} mode={mode} onModeChange={onModeChange} />
+        <SelectionTrigger
+          selection={selection}
+          mode={mode}
+          isRunning={isRunning}
+          onModeChange={onModeChange}
+          onRun={onRun}
+        />
       ) : (
         <AskComposer />
       )}
 
       <div className='flex flex-none pr-[22px] pb-3 pl-[18px]'>
-        <ModelSelect provider={provider} />
+        <ModelSelect provider={provider} model={model} onModelChange={onModelChange} />
       </div>
     </div>
   )

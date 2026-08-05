@@ -113,6 +113,7 @@ export type EditorCopy = {
     undo: string
     moreSuffix: string
     rerunIcon: string
+    runningIcon: string
     noSelection: string
     wordsSuffix: string
     runSuggestions: string

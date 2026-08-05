@@ -70,6 +70,7 @@ export const EDITOR_COPY: EditorCopy = {
     undo: 'Undo',
     moreSuffix: 'more for',
     rerunIcon: '↻',
+    runningIcon: '⋯',
     noSelection: 'No selection yet',
     wordsSuffix: 'w',
     runSuggestions: 'Run suggestions',
