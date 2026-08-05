@@ -51,3 +51,37 @@ export type SuggestionSet = {
   suggestedAgo: string
   remaining: number
 }
+
+export type RunSuggestionsInput = {
+  model: string
+  mode: SuggestionModeKey
+  /** The variant a mode with `options` was run with, e.g. `Warmer`. */
+  toneOption?: string
+  context: SuggestionContext
+  draft: {
+    title: string
+    description: string
+  }
+}
+
+export type RunSuggestionsResult =
+  | { status: 'ok'; suggestions: Suggestion[] }
+  | { status: 'invalid_key' }
+  | { status: 'rate_limited' }
+  | { status: 'unreachable' }
+  /** The model declined the passage. `reason` is the category it gave. */
+  | { status: 'refused'; reason: string }
+  /** The answer hit `max_tokens`, so the takes are incomplete. */
+  | { status: 'truncated' }
+  | { status: 'failed' }
+
+/** The run, plus the three outcomes the model never sees. */
+export type SuggestionsActionResult =
+  | RunSuggestionsResult
+  | { status: 'invalid_input'; message: string }
+  /** No stored key for the provider, so the caller shows the setup step. */
+  | { status: 'no_key' }
+  /** A provider with a key but no run layer yet. */
+  | { status: 'unsupported_provider' }
+
+export type SuggestionsFailureStatus = Exclude<SuggestionsActionResult['status'], 'ok'>
